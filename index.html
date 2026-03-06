@@ -266,6 +266,44 @@ mark{background:#fef08a;border-radius:2px;padding:0 2px;color:inherit}
   color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;
   font-family:inherit;transition:background .15s}
 .copy-prompt-btn:hover{background:#2563eb}
+
+/* ── AI 변환 플로우 ── */
+.convert-flow{display:flex;flex-direction:column;gap:0}
+.flow-step{background:#f8fafc;border:1.5px solid var(--line);border-radius:10px;padding:14px 16px}
+.flow-step-label{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;color:var(--ink2);margin-bottom:10px}
+.step-badge{background:var(--ink);color:#fff;border-radius:50%;width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0}
+.step-badge-2{background:#16a34a}
+.flow-arrow{text-align:center;font-size:20px;color:var(--ink4);padding:4px 0;line-height:1}
+.convert-btn{padding:9px 22px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);color:#fff;border:none;
+  border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;
+  transition:all .2s;display:flex;align-items:center;gap:6px}
+.convert-btn:hover{filter:brightness(1.1);transform:translateY(-1px)}
+.convert-btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.convert-error{margin-top:8px;padding:8px 12px;background:#fef2f2;color:#dc2626;border:1px solid #fecaca;border-radius:7px;font-size:12px}
+.loading-dots::after{content:'';animation:dots 1.2s infinite}
+@keyframes dots{0%{content:''}33%{content:'.'}66%{content:'..'}100%{content:'...'}}
+
+/* 학년 select 스타일 */
+.grade-select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2394a3b8'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;padding-right:24px;cursor:pointer;width:90px}
+
+/* 학교/학년 필터 행 */
+.sf-row{display:flex;flex-wrap:wrap;align-items:center;gap:12px}
+.sf-group{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.sf-label{font-size:11px;font-weight:700;color:var(--ink4);white-space:nowrap}
+.sf-chips{display:flex;flex-wrap:wrap;gap:4px}
+.sfchip{padding:4px 12px;border:1.5px solid var(--line);border-radius:100px;background:#fff;
+  font-size:11px;font-weight:700;color:var(--ink3);cursor:pointer;font-family:inherit;
+  transition:all .15s;white-space:nowrap}
+.sfchip:hover{border-color:#93c5fd;color:#1d4ed8;background:#eff6ff}
+.sfchip.on{color:#fff}
+.school-chip.on{background:#1d4ed8;border-color:#1d4ed8}
+.grade-chip[data-g="1"].on{background:#0f766e;border-color:#0f766e}
+.grade-chip[data-g="2"].on{background:#7c3aed;border-color:#7c3aed}
+.grade-chip[data-g="3"].on{background:#be123c;border-color:#be123c}
+.grade-badge{font-size:8.5px;font-weight:700;padding:1px 5px;border-radius:4px;margin-top:2px;display:inline-block}
+.grade-badge.g1{background:#ccfbf1;color:#0f766e}
+.grade-badge.g2{background:#ede9fe;color:#7c3aed}
+.grade-badge.g3{background:#fce7f3;color:#9d174d}
 @media print{
   @page{size:A4 portrait;margin:10mm 8mm}
   body{background:#fff}
@@ -314,21 +352,51 @@ mark{background:#fef08a;border-radius:2px;padding:0 2px;color:inherit}
 
   <!-- 텍스트 탭 -->
   <div class="itab-body" id="tab-text">
-    <div class="text-input-row">
-      <div class="text-input-col">
-        <label class="input-label">학생 이름</label>
-        <input type="text" id="txtName" placeholder="예: 정하율" class="name-input">
+    <div class="convert-flow">
+      <!-- 1단계: 카톡 원문 입력 -->
+      <div class="flow-step" id="step1">
+        <div class="flow-step-label"><span class="step-badge">1</span> 학생 카톡 내용 붙여넣기</div>
+        <div class="text-input-row" style="margin-bottom:8px">
+          <div class="text-input-col">
+            <label class="input-label">학생 이름</label>
+            <input type="text" id="txtName" placeholder="예: 정하율" class="name-input">
+          </div>
+          <div class="text-input-col flex1">
+            <label class="input-label">학교 (선택)</label>
+            <input type="text" id="txtSchool" placeholder="예: 충남고" class="name-input">
+          </div>
+          <div class="text-input-col">
+            <label class="input-label">학년</label>
+            <select id="txtGrade" class="name-input grade-select">
+              <option value="">선택</option>
+              <option value="1">1학년</option>
+              <option value="2">2학년</option>
+              <option value="3">3학년</option>
+            </select>
+          </div>
+        </div>
+        <textarea id="txtRaw" class="sched-textarea" placeholder="학생이 카톡으로 보낸 내용을 그대로 붙여넣으세요.&#10;&#10;예)&#10;월, 화, 수, 목: 학교 야자(기숙사)&#10;금: 수학과외(집근처) 9시 - 약 11시 반&#10;토: 통합사회(대훈) 1-4시&#10;일: 국어(대훈) 1-4시" style="height:110px"></textarea>
+        <div style="display:flex;justify-content:flex-end;margin-top:8px">
+          <button class="convert-btn" id="convertBtn" onclick="convertWithAI()">
+            <span id="convertBtnText">✨ AI로 형식 변환</span>
+          </button>
+        </div>
+        <div class="convert-error" id="convertError" style="display:none"></div>
       </div>
-      <div class="text-input-col flex1">
-        <label class="input-label">학교 (선택)</label>
-        <input type="text" id="txtSchool" placeholder="예: 충남고" class="name-input">
+
+      <!-- 화살표 구분선 -->
+      <div class="flow-arrow" id="flowArrow" style="display:none">↓</div>
+
+      <!-- 2단계: 변환 결과 확인 + 적용 -->
+      <div class="flow-step" id="step2" style="display:none">
+        <div class="flow-step-label"><span class="step-badge step-badge-2">2</span> 변환 결과 확인 후 적용</div>
+        <textarea id="txtSchedule" class="sched-textarea" style="height:150px;border-color:#86efac"></textarea>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+          <button class="prompt-btn" onclick="resetConvert()">← 다시 입력</button>
+          <button class="apply-btn" onclick="applyTextInput()">시간표 적용 →</button>
+        </div>
+        <div class="apply-result" id="applyResult"></div>
       </div>
-    </div>
-    <label class="input-label" style="margin-top:10px;display:block">시간표 (Claude 변환 결과 붙여넣기)</label>
-    <textarea id="txtSchedule" class="sched-textarea" placeholder="월: 학교야자(9시)&#10;화: 학교야자(9시)&#10;수: 학교야자(9시)&#10;목: 학교야자(9시)&#10;금: 학교(4시), 수학과외(집근처) 9시-11시30분&#10;토: 통합사회(대훈) 1시-4시, 수학과외(집근처) 9시-11시30분&#10;일: 국어(대훈) 1시-4시"></textarea>
-    <div class="text-actions">
-      <button class="prompt-btn" onclick="showPrompt()">📋 Claude 변환 프롬프트 보기</button>
-      <button class="apply-btn" onclick="applyTextInput()">시간표 적용 →</button>
     </div>
   </div>
 
@@ -403,7 +471,23 @@ mark{background:#fef08a;border-radius:2px;padding:0 2px;color:inherit}
   </div>
   <!-- 학생 이름 다중 필터 -->
   <div class="name-filter-wrap" id="name-filter-wrap">
-    <div class="name-filter-head">
+    <!-- 학교 + 학년 필터 -->
+    <div class="sf-row">
+      <div class="sf-group">
+        <span class="sf-label">학교</span>
+        <div class="sf-chips" id="school-chips"></div>
+      </div>
+      <div class="sf-group">
+        <span class="sf-label">학년</span>
+        <div class="sf-chips">
+          <button class="sfchip grade-chip" data-g="1" onclick="toggleGrade('1')">1학년</button>
+          <button class="sfchip grade-chip" data-g="2" onclick="toggleGrade('2')">2학년</button>
+          <button class="sfchip grade-chip" data-g="3" onclick="toggleGrade('3')">3학년</button>
+        </div>
+      </div>
+      <button class="name-filter-clear" id="sf-clear" onclick="clearSchoolGrade()" style="display:none;margin-left:auto">✕ 필터 해제</button>
+    </div>
+    <div class="name-filter-head" style="margin-top:8px">
       <span class="name-filter-label">학생 필터</span>
       <button class="name-filter-clear" id="name-filter-clear" onclick="clearNames()" style="display:none">✕ 선택 해제</button>
     </div>
@@ -460,8 +544,34 @@ const JINHAK = {
 // ── 파싱 엔진 ──
 function toMin(hStr, mStr, half) {
   let h = parseInt(hStr), m = mStr ? parseInt(mStr) : (half ? 30 : 0);
-  if (h >= 1 && h <= 8) h += 12; // PM 보정
+  // 1~11시 → 오후 보정 (학원 시간표에서 오전 1~11시 수업은 없음)
+  if (h >= 1 && h <= 11) h += 12;
   return h * 60 + m;
+}
+function toMinEnd(hStr, mStr, half, startMin) {
+  let h = parseInt(hStr), m = mStr ? parseInt(mStr) : (half ? 30 : 0);
+  if (h >= 1 && h <= 11) h += 12;
+  let et = h * 60 + m;
+  // 종료 <= 시작이면 +12 보정 (ex. 10시가 22:00이어야 하는 경우)
+  if (et <= startMin) et += 12 * 60;
+  return et;
+}
+function parseSchoolEnd(text) {
+  const schoolM = text.match(/학교[가-힣\s]*[（(](\d{1,2})시(?:\s*(\d{2})분|([반])?)?[)）]/);
+  if (!schoolM) return 960; // 기본 16:00
+  const h = parseInt(schoolM[1]);
+  const min = schoolM[2] ? parseInt(schoolM[2]) : (schoolM[3] ? 30 : 0);
+  let eh = h;
+  if (/야자|오자/.test(text)) {
+    // 야자/오자: 9→21, 10→22, 11→23, 1~8 → +12
+    if (eh >= 1 && eh <= 8) eh += 12;
+    else if (eh === 9) eh = 21;
+    else if (eh === 10) eh = 22;
+    else if (eh === 11) eh = 23;
+  } else {
+    if (eh >= 1 && eh <= 8) eh += 12;
+  }
+  return eh * 60 + min;
 }
 function classify(t) {
   if (/학교|야자|오자|오후자습/.test(t)) return 'school';
@@ -476,24 +586,33 @@ function classify(t) {
 function parseBlocks(text) {
   if (!text || /^(없음|X|-|\s*)$/.test(text.trim())) return [];
   const blocks = [];
-  // 학교 종료 시간
-  const schoolM = text.match(/학교[가-힣\s]*[（(](\d{1,2})시(?:\s*(\d{2})분|([반])?)?[)）]/);
-  if (schoolM || /학교|야자|오자/.test(text)) {
-    let et = 960; // 기본 16:00
-    if (schoolM) {
-      const h = schoolM[1], min = schoolM[2], half = schoolM[3];
-      et = toMin(h, min, !!half && !min);
-    }
+  // 학교 블록
+  if (/학교|야자|오자/.test(text)) {
+    const et = parseSchoolEnd(text);
     blocks.push([480, et, '학교', 'school']);
   }
-  // 범위 시간 패턴: 8시-10시, 8:00-10:00, 8시30분-10시, 8시반-10시 등
+  // 패턴1: X시Y분-Z시W분 or X:Y-Z:W or X시-Y시 (시 키워드 포함)
   const rangePat = /(\d{1,2})(?::(\d{2})|시\s*(\d{1,2})분?|시(반)?)\s*[-~]\s*(\d{1,2})(?::(\d{2})|시\s*(\d{1,2})분?|시(반)?)/g;
+  // 패턴2: X-Y시 (앞 숫자에 시 없는 경우, ex. "10-12시")
+  const simpleRangePat = /(?<![:\d])(\d{1,2})\s*[-~]\s*(\d{1,2})시/g;
+  const pat1Indices = new Set();
   let m;
   while ((m = rangePat.exec(text)) !== null) {
+    pat1Indices.add(m.index);
     const [, sh, sc, sk, shalf, eh, ec, ek, ehalf] = m;
     const st = toMin(sh, sc||sk, !!(shalf&&!sc&&!sk));
-    const et = toMin(eh, ec||ek, !!(ehalf&&!ec&&!ek));
-    // 레이블: 매치 앞 텍스트의 마지막 세그먼트
+    const et = toMinEnd(eh, ec||ek, !!(ehalf&&!ec&&!ek), st);
+    const pre = text.slice(0, m.index).trim();
+    const seg = pre.split(/[,/\n]/).pop().trim().replace(/\s*[（(][^)）]*[)）]\s*$/, '').trim();
+    const label = (seg && seg.length > 1 && !/^(없음|X)$/.test(seg)) ? seg.slice(-12) : '일정';
+    const cat = classify(label);
+    if (st < et) blocks.push([st, et, label, cat]);
+  }
+  while ((m = simpleRangePat.exec(text)) !== null) {
+    if (pat1Indices.has(m.index)) continue;
+    const [, sh, eh] = m;
+    const st = toMin(sh, null, false);
+    const et = toMinEnd(eh, null, false, st);
     const pre = text.slice(0, m.index).trim();
     const seg = pre.split(/[,/\n]/).pop().trim().replace(/\s*[（(][^)）]*[)）]\s*$/, '').trim();
     const label = (seg && seg.length > 1 && !/^(없음|X)$/.test(seg)) ? seg.slice(-12) : '일정';
@@ -672,6 +791,7 @@ function buildCard(s,idx){
         <div class="avatar" style="background:${col}">${s.name[0]}</div>
         <div class="cname">${hl(s.name,Q_)}</div>
         ${s.school?`<div class="cschool">${hl(s.school,Q_)}</div>`:''}
+        ${s.grade?`<span class="grade-badge g${s.grade}">${s.grade}학년</span>`:''}
       </div>
       <div class="tt-body">
         <div class="tt-section" style="flex:1">
@@ -702,6 +822,7 @@ function buildCard(s,idx){
       <div class="avatar" style="background:${col}">${s.name[0]}</div>
       <div class="cname">${hl(s.name,Q_)}</div>
       ${s.school?`<div class="cschool">${hl(s.school,Q_)}</div>`:''}
+      ${s.grade?`<span class="grade-badge g${s.grade}">${s.grade}학년</span>`:''}
       <div class="cdate">${s.date}</div>
     </div>
     <div class="tt-body">
@@ -724,6 +845,7 @@ function buildCard(s,idx){
 }
 
 let view='card', activeDays=new Set(), Q='', selectedNames=new Set();
+let selectedSchools=new Set(), selectedGrades=new Set();
 
 function getList(){
   const q=Q.toLowerCase();
@@ -733,23 +855,50 @@ function getList(){
     const ct=ALL_DAYS.map(d=>s[d]||'').join(' ').toLowerCase().includes(q);
     const textMatch=(nm||sc||ct);
     const nameMatch=selectedNames.size===0||selectedNames.has(s.name);
-    // 요일 필터: 선택된 요일 중 하나라도 블록이 있으면 표시
+    const schoolMatch=selectedSchools.size===0||selectedSchools.has(s.school||'');
+    const gradeMatch=selectedGrades.size===0||selectedGrades.has(String(s.grade||''));
     const dayMatch=activeDays.size===0||[...activeDays].some(d=>(s.blocks[d]||[]).length>0);
     const conflictMatch=view!=='conflict'||s.conflict;
-    return textMatch&&nameMatch&&dayMatch&&conflictMatch;
+    return textMatch&&nameMatch&&schoolMatch&&gradeMatch&&dayMatch&&conflictMatch;
   });
 }
 function renderNameFilter(){
   const box=document.getElementById('name-filter-chips');
   if(!box)return;
-  box.innerHTML=DATA.submitted.map(s=>{
+  // 학교 칩 렌더
+  const schoolBox=document.getElementById('school-chips');
+  if(schoolBox){
+    const schools=[...new Set(DATA.submitted.map(s=>s.school||'').filter(Boolean))].sort();
+    schoolBox.innerHTML=schools.map(sc=>{
+      const on=selectedSchools.has(sc);
+      return `<button class="sfchip school-chip${on?' on':''}" onclick="toggleSchool('${sc}')">${sc}</button>`;
+    }).join('');
+  }
+  // 학년 칩 on 상태 갱신
+  document.querySelectorAll('.grade-chip').forEach(c=>{
+    c.classList.toggle('on', selectedGrades.has(c.dataset.g));
+  });
+  // 이름 칩 렌더 - 가나다 정렬
+  const filtered=selectedSchools.size>0||selectedGrades.size>0
+    ? DATA.submitted.filter(s=>{
+        const sm=selectedSchools.size===0||selectedSchools.has(s.school||'');
+        const gm=selectedGrades.size===0||selectedGrades.has(String(s.grade||''));
+        return sm&&gm;
+      })
+    : [...DATA.submitted];
+  filtered.sort((a,b)=>a.name.localeCompare(b.name,'ko'));
+  box.innerHTML=filtered.map(s=>{
     const on=selectedNames.has(s.name);
     const col=acolor(s.name);
+    const gradeTxt=s.grade?` <span style="font-size:9px;opacity:.8">${s.grade}학년</span>`:'';
     return `<button class="nchip${on?' on':''}" onclick="toggleName('${s.name}')" style="${on?`background:${col};color:#fff;border-color:${col}`:''}">
-      ${s.name}${s.school?`<span class="nchip-school">${s.school}</span>`:''}
+      ${s.name}${gradeTxt}${s.school?`<span class="nchip-school">${s.school}</span>`:''}
     </button>`;
   }).join('');
   document.getElementById('name-filter-clear').style.display=selectedNames.size>0?'':'none';
+  // 상위 해제 버튼
+  const sfClear=document.getElementById('sf-clear');
+  if(sfClear) sfClear.style.display=(selectedSchools.size>0||selectedGrades.size>0)?'':'none';
 }
 function toggleName(name){
   if(selectedNames.has(name))selectedNames.delete(name);
@@ -758,6 +907,19 @@ function toggleName(name){
   render();
 }
 function clearNames(){selectedNames.clear();renderNameFilter();render();}
+function toggleSchool(sc){
+  if(selectedSchools.has(sc))selectedSchools.delete(sc);
+  else selectedSchools.add(sc);
+  selectedNames.clear(); // 학교 바꾸면 학생 선택 초기화
+  renderNameFilter();render();
+}
+function toggleGrade(g){
+  if(selectedGrades.has(g))selectedGrades.delete(g);
+  else selectedGrades.add(g);
+  selectedNames.clear();
+  renderNameFilter();render();
+}
+function clearSchoolGrade(){selectedSchools.clear();selectedGrades.clear();selectedNames.clear();renderNameFilter();render();}
 
 function render(){
   const isCard=view==='card'||view==='conflict';
@@ -778,8 +940,8 @@ function render(){
     const list=getList();
     document.getElementById('rcnt').textContent=list.length+'명';
     const days=activeDays.size>0?ALL_DAYS.filter(d=>activeDays.has(d)):ALL_DAYS;
-    const hd=`<thead><tr><th>학생</th><th>학교</th>${days.map(d=>`<th>${d}요일</th>`).join('')}</tr></thead>`;
-    const bd=`<tbody>${list.map(s=>`<tr><td>${hl(s.name,Q)}</td><td style="color:var(--ink3);font-size:12px">${hl(s.school||'—',Q)}</td>${days.map(d=>{const v=s[d]||'';const e=!v||v==='없음'||v==='X';return`<td class="${e?'td-e':''}">${e?'—':hl(v,Q)}</td>`}).join('')}</tr>`).join('')}</tbody>`;
+    const hd=`<thead><tr><th>학생</th><th>학교</th><th>학년</th>${days.map(d=>`<th>${d}요일</th>`).join('')}</tr></thead>`;
+    const bd=`<tbody>${list.map(s=>`<tr><td>${hl(s.name,Q)}</td><td style="color:var(--ink3);font-size:12px">${hl(s.school||'—',Q)}</td><td style="color:var(--ink3);font-size:12px">${s.grade?s.grade+'학년':'—'}</td>${days.map(d=>{const v=s[d]||'';const e=!v||v==='없음'||v==='X';return`<td class="${e?'td-e':''}">${e?'—':hl(v,Q)}</td>`}).join('')}</tr>`).join('')}</tbody>`;
     document.getElementById('tbl').innerHTML=hd+bd;
   }else{
     const q=Q.toLowerCase(),list=DATA.missing.filter(n=>n.includes(q));
@@ -805,7 +967,141 @@ function toggleDay(d){
 }
 document.getElementById('q').addEventListener('input',e=>{Q=e.target.value.trim();render()});
 
-// ── 입력 탭 전환 ──
+// ── AI 변환 ──
+const CONVERT_PROMPT = `다음 학생의 시간표를 아래 형식으로 변환해줘.
+
+【형식 규칙】
+- 각 줄은 반드시 "요일: 내용" 형식
+- 요일은 월/화/수/목/금/토/일 중 하나
+- 학교 종료 시간은 반드시 명시: 학교(4시), 학교야자(9시), 학교오자(6시) 등
+- 시간은 반드시 "X시-Y시" 또는 "X시Y분-Y시Z분" 형식으로 통일
+- "월과 동일", "위와 같음" 등 참조 표현 금지 → 내용 직접 기재
+- 일정 없으면: 없음
+- 여러 일정은 쉼표로 구분
+
+【불명확한 시간 처리 규칙】
+- 시간이 명시되지 않은 일정(예: "수학 미정", "국어학원", "진학학원")은 시간 없이 이름만 기재
+  예) 토: 진학학원
+- 오전/오후가 불분명한 경우, 변환 결과 아래에 반드시 질문을 추가:
+  [확인 필요] 토요일 수학학원 시간이 오전인가요, 오후인가요?
+- 여러 개면 각각 따로 질문
+
+【출력 예시 - 시간 명확한 경우】
+월: 학교야자(9시)
+화: 학교야자(9시), 수학학원(둔산동) 7시30분-10시
+수: 학교(4시), 국어학원(둔산동) 5시-8시
+목: 학교야자(9시)
+금: 학교(3시), 영어과외(집근처) 7시-9시
+토: 수학학원(둔산동) 2시-5시
+일: 없음
+
+【출력 예시 - 불명확한 시간 포함 경우】
+월: 학교야자(9시), 수학학원(둔산동) 7시30분-10시
+화: 학교야자(9시)
+수: 학교(4시)
+목: 학교야자(9시)
+금: 학교(4시)
+토: 수학학원(둔산동) 10시-12시
+일: 없음
+
+[확인 필요] 토요일 수학학원이 오전 10시-12시인가요, 오후 10시-12시인가요?`;
+
+async function convertWithAI(){
+  const raw = document.getElementById('txtRaw').value.trim();
+  const errEl = document.getElementById('convertError');
+  errEl.style.display = 'none';
+  if(!raw){ errEl.style.display=''; errEl.textContent='⚠ 카톡 내용을 붙여넣어주세요.'; return; }
+
+  const btn = document.getElementById('convertBtn');
+  const btnText = document.getElementById('convertBtnText');
+  btn.disabled = true;
+  btnText.className = 'loading-dots';
+  btnText.textContent = '변환 중';
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'anthropic-version': '2023-06-01', 'x-api-key': window.ANTHROPIC_KEY || '' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: CONVERT_PROMPT,
+        messages: [{ role: 'user', content: raw }]
+      })
+    });
+    if(res.status === 401){
+      // API 키 없음 → 키 입력 모달
+      btn.disabled = false; btnText.className=''; btnText.textContent='✨ AI로 형식 변환';
+      showApiKeyModal(raw);
+      return;
+    }
+    const data = await res.json();
+    const result = data.content?.[0]?.text || '';
+    if(!result){ throw new Error('변환 결과가 없습니다.'); }
+
+    // 2단계로 전환
+    document.getElementById('txtSchedule').value = result;
+    // [확인 필요] 항목 있으면 안내
+    const hasQuestion = result.includes('[확인 필요]');
+    const step2Label = document.querySelector('#step2 .flow-step-label');
+    if(step2Label) {
+      step2Label.innerHTML = hasQuestion
+        ? `<span class="step-badge step-badge-2">2</span> AI가 확인이 필요한 항목을 질문했습니다 — 수정 후 적용하세요 <span style="color:#dc2626;font-size:11px">⚠ [확인 필요] 줄은 삭제해주세요</span>`
+        : `<span class="step-badge step-badge-2">2</span> 변환 결과 확인 후 적용`;
+    }
+    document.getElementById('txtSchedule').style.borderColor = hasQuestion ? '#f59e0b' : '#86efac';
+    document.getElementById('step2').style.display = '';
+    document.getElementById('flowArrow').style.display = '';
+    document.getElementById('step2').scrollIntoView({behavior:'smooth', block:'nearest'});
+  } catch(e) {
+    errEl.style.display = '';
+    errEl.textContent = '⚠ 변환 실패: ' + (e.message || '네트워크 오류');
+  } finally {
+    btn.disabled = false; btnText.className=''; btnText.textContent='✨ AI로 형식 변환';
+  }
+}
+
+function resetConvert(){
+  document.getElementById('step2').style.display = 'none';
+  document.getElementById('flowArrow').style.display = 'none';
+  document.getElementById('txtSchedule').value = '';
+  document.getElementById('applyResult').style.display = 'none';
+}
+
+// ── API 키 입력 모달 ──
+function showApiKeyModal(raw){
+  const existing = document.getElementById('apiKeyOverlay');
+  if(existing) existing.remove();
+  const overlay = document.createElement('div');
+  overlay.id = 'apiKeyOverlay';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(15,23,42,.6);z-index:300;display:flex;align-items:center;justify-content:center';
+  overlay.innerHTML = `
+    <div style="background:#fff;border-radius:16px;width:min(440px,92vw);padding:28px 28px 24px;box-shadow:0 20px 60px rgba(0,0,0,.25)">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <strong style="font-size:14px;color:var(--ink)">Anthropic API 키 입력</strong>
+        <button onclick="document.getElementById('apiKeyOverlay').remove()" style="background:none;border:none;cursor:pointer;font-size:18px;color:var(--ink3)">×</button>
+      </div>
+      <p style="font-size:12px;color:var(--ink3);margin-bottom:14px;line-height:1.6">AI 변환 기능을 사용하려면 Anthropic API 키가 필요합니다.<br>키는 브라우저에만 저장되며 외부로 전송되지 않습니다.</p>
+      <input id="apiKeyInput" type="password" placeholder="sk-ant-..." style="width:100%;padding:9px 12px;border:1.5px solid var(--line);border-radius:8px;font-size:13px;font-family:inherit;outline:none;margin-bottom:12px">
+      <div style="display:flex;gap:8px;justify-content:flex-end">
+        <button onclick="document.getElementById('apiKeyOverlay').remove()" style="padding:8px 16px;border:1.5px solid var(--line);border-radius:7px;background:#fff;font-size:12px;font-weight:600;color:var(--ink3);cursor:pointer;font-family:inherit">취소</button>
+        <button onclick="saveApiKey('${encodeURIComponent(raw)}')" style="padding:8px 20px;background:#3b82f6;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">저장 후 변환</button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+  setTimeout(()=>document.getElementById('apiKeyInput').focus(), 100);
+}
+function saveApiKey(encodedRaw){
+  const key = document.getElementById('apiKeyInput').value.trim();
+  if(!key){ alert('API 키를 입력해주세요.'); return; }
+  window.ANTHROPIC_KEY = key;
+  try{ localStorage.setItem('anthropic_key', key); }catch(e){}
+  document.getElementById('apiKeyOverlay').remove();
+  document.getElementById('txtRaw').value = decodeURIComponent(encodedRaw);
+  convertWithAI();
+}
+// 저장된 키 복원
+try{ const k=localStorage.getItem('anthropic_key'); if(k) window.ANTHROPIC_KEY=k; }catch(e){}
 function switchInputTab(tab){
   document.querySelectorAll('.itab').forEach((b,i)=>b.classList.toggle('on',['text','csv'][i]===tab));
   document.getElementById('tab-text').style.display=tab==='text'?'':'none';
@@ -816,6 +1112,7 @@ function switchInputTab(tab){
 function applyTextInput(){
   const name=document.getElementById('txtName').value.trim();
   const school=document.getElementById('txtSchool').value.trim();
+  const grade=document.getElementById('txtGrade').value;
   const raw=document.getElementById('txtSchedule').value.trim();
   const res=document.getElementById('applyResult')||(()=>{
     const d=document.createElement('div');d.id='applyResult';d.className='apply-result';
@@ -842,11 +1139,13 @@ function applyTextInput(){
   DAYS.forEach(d=>{blocks[d]=parseBlocks(dayTexts[d]||'');});
   const today=new Date().toISOString().slice(0,10);
   let student={name,school,date:today,blocks};
+  if(grade) student.grade=Number(grade);
   DAYS.forEach(d=>{student[d]=dayTexts[d]||'';});
   student=applyJinhak(student);
   mergeStudent(DATA,student);
   saveData(DATA);
   updateBadges();
+  renderNameFilter(); // 학생 필터 즉시 반영
   render();
   // 결과 표시
   const isNew=!DATA.submitted.some(s=>s.name===name)||true;
@@ -854,6 +1153,7 @@ function applyTextInput(){
   res.textContent=`✅ ${name} 시간표 ${isNew?'추가':'업데이트'} 완료`;
   document.getElementById('txtName').value='';
   document.getElementById('txtSchool').value='';
+  document.getElementById('txtGrade').value='';
   document.getElementById('txtSchedule').value='';
 }
 
