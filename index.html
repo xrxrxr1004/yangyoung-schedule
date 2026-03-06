@@ -327,6 +327,45 @@ mark{background:#fef08a;border-radius:2px;padding:0 2px;color:inherit}
   .cname{font-size:10px}
   .avatar{width:24px;height:24px;font-size:11px}
 }
+
+/* ── 덮어쓰기 토글 ── */
+.ow-row{display:flex;align-items:center;justify-content:space-between;padding:9px 12px;border-radius:8px;margin-bottom:10px;cursor:pointer;user-select:none;transition:background .2s,border-color .2s;border:1.5px solid transparent}
+.ow-row.mode-new{background:#f0fdf4;border-color:#bbf7d0}
+.ow-row.mode-overwrite{background:#fffbeb;border-color:#fcd34d}
+.ow-left{display:flex;align-items:center;gap:8px}
+.ow-icon{font-size:14px;width:26px;height:26px;display:flex;align-items:center;justify-content:center;border-radius:7px;transition:background .2s;flex-shrink:0}
+.mode-new .ow-icon{background:#dcfce7}
+.mode-overwrite .ow-icon{background:#fef3c7}
+.ow-text{display:flex;flex-direction:column;gap:1px}
+.ow-label{font-size:11px;font-weight:700;transition:color .2s}
+.mode-new .ow-label{color:#15803d}
+.mode-overwrite .ow-label{color:#b45309}
+.ow-desc{font-size:10px;transition:color .2s}
+.mode-new .ow-desc{color:#4ade80}
+.mode-overwrite .ow-desc{color:#fbbf24}
+.ow-toggle-wrap{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.ow-toggle-label{font-size:10px;font-weight:600}
+.mode-new .ow-toggle-label{color:#86efac}
+.mode-overwrite .ow-toggle-label{color:#f59e0b}
+.ow-toggle{position:relative;width:32px;height:18px;cursor:pointer}
+.ow-toggle input{display:none}
+.ow-track{position:absolute;inset:0;border-radius:100px;transition:background .2s}
+.mode-new .ow-track{background:#bbf7d0}
+.mode-overwrite .ow-track{background:#fcd34d}
+.ow-thumb{position:absolute;width:12px;height:12px;background:#fff;border-radius:50%;top:3px;left:3px;box-shadow:0 1px 3px rgba(0,0,0,.2);transition:transform .2s}
+.mode-overwrite .ow-thumb{transform:translateX(14px)}
+.ow-preview{background:#fffbeb;border:1.5px solid #fde68a;border-radius:8px;padding:9px 12px;margin-bottom:10px;display:none}
+.ow-preview.visible{display:block;animation:owSlide .2s ease}
+@keyframes owSlide{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+.ow-preview-head{display:flex;align-items:center;gap:6px;margin-bottom:7px}
+.ow-preview-badge{font-size:9px;font-weight:700;background:#fef3c7;color:#b45309;padding:2px 7px;border-radius:100px}
+.ow-preview-name{font-size:11px;font-weight:700;color:#92400e}
+.ow-preview-days{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.ow-preview-day{background:#fff;border:1px solid #fde68a;border-radius:5px;padding:4px 2px;text-align:center}
+.ow-preview-day-lbl{font-size:9px;font-weight:700;color:#b45309;display:block}
+.ow-preview-day-val{font-size:9px;color:#78716c;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.apply-btn.btn-overwrite{background:#f59e0b !important}
+.apply-btn.btn-overwrite:hover{background:#d97706 !important}
 </style>
 </head>
 <body>
@@ -927,14 +966,21 @@ function renderNameFilter(){
   document.querySelectorAll('.grade-chip').forEach(c=>{
     c.classList.toggle('on', selectedGrades.has(c.dataset.g));
   });
-  // 이름 칩 렌더 - 가나다 정렬
-  const filtered=selectedSchools.size>0||selectedGrades.size>0
+  // 이름 칩 렌더 - 가나다 정렬 + 검색어 필터
+  const qChip = Q.toLowerCase();
+  let filtered=selectedSchools.size>0||selectedGrades.size>0
     ? DATA.submitted.filter(s=>{
         const sm=selectedSchools.size===0||selectedSchools.has(s.school||'');
         const gm=selectedGrades.size===0||selectedGrades.has(String(s.grade||''));
         return sm&&gm;
       })
     : [...DATA.submitted];
+  // 검색어가 있으면 이름/학교 기준으로 칩도 필터
+  if(qChip){
+    filtered=filtered.filter(s=>
+      s.name.toLowerCase().includes(qChip)||(s.school||'').toLowerCase().includes(qChip)
+    );
+  }
   filtered.sort((a,b)=>a.name.localeCompare(b.name,'ko'));
   box.innerHTML=filtered.map(s=>{
     const on=selectedNames.has(s.name);
@@ -1028,7 +1074,7 @@ function toggleDay(d){
   document.querySelectorAll('.dchip').forEach(c=>c.classList.toggle('on',activeDays.has(c.dataset.d)));
   render();
 }
-document.getElementById('q').addEventListener('input',e=>{Q=e.target.value.trim();render()});
+document.getElementById('q').addEventListener('input',e=>{Q=e.target.value.trim();renderNameFilter();render()});
 
 // ── 프롬프트 인라인 복사 ──
 function copyPromptInline(){
