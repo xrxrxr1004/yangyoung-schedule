@@ -41,7 +41,34 @@ h1 em{font-style:normal;color:var(--c-mon)}
 .badge strong{font-size:15px;font-weight:700}
 .print-btn{background:var(--ink);color:#fff;border:none;cursor:pointer;padding:9px 20px;border-radius:8px;font-size:13px;font-family:inherit;font-weight:600;display:flex;align-items:center;gap:6px;transition:background .15s}
 .print-btn:hover{background:var(--c-mon)}
-.ctrl{display:flex;flex-wrap:wrap;gap:10px;align-items:center;background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:12px 16px;margin-bottom:16px}
+.ctrl{background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:12px 16px;margin-bottom:16px;display:flex;flex-direction:column;gap:10px}
+.ctrl-top{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.dchips{display:flex;align-items:center;gap:4px}
+.dchips-label{font-size:11px;font-weight:700;color:var(--ink4);margin-right:2px;white-space:nowrap}
+
+/* 학생 이름 다중 필터 */
+.name-filter-wrap{border-top:1px solid var(--line);padding-top:10px}
+.name-filter-head{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.name-filter-label{font-size:11px;font-weight:700;color:var(--ink4)}
+.name-filter-clear{background:none;border:1px solid #fca5a5;color:#dc2626;border-radius:5px;
+  padding:2px 8px;font-size:11px;cursor:pointer;font-family:inherit;font-weight:600}
+.name-filter-clear:hover{background:#fef2f2}
+.name-filter-chips{display:flex;flex-wrap:wrap;gap:5px}
+.nchip{padding:4px 10px;border:1.5px solid var(--line);border-radius:100px;background:#f8fafc;
+  font-size:12px;font-weight:600;color:var(--ink2);cursor:pointer;font-family:inherit;
+  transition:all .15s;display:flex;align-items:center;gap:5px;white-space:nowrap}
+.nchip:hover{border-color:#93c5fd;color:#1d4ed8;background:#eff6ff}
+.nchip.on{font-weight:700}
+.nchip-school{font-size:10px;opacity:.75;font-weight:400}
+
+/* 요일 집중 뷰 카드 */
+.scard-focus{min-width:220px;max-width:320px}
+.chead-sm{flex:0 0 80px;padding:10px 8px}
+.chead-sm .cname{font-size:12px}
+.chead-sm .cschool{font-size:10px}
+.day-col-focus{flex:1!important}
+.day-col-focus .dhead{font-size:14px;font-weight:800;padding:6px 4px}
+.card-grid.focus-grid{display:flex;flex-wrap:wrap;gap:8px}
 .srch{position:relative;flex:0 0 210px}
 .srch svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--ink4);pointer-events:none}
 .srch input{width:100%;padding:8px 12px 8px 33px;border:1.5px solid var(--line);border-radius:8px;font-size:13px;font-family:inherit;color:var(--ink);outline:none;background:var(--bg);transition:border-color .2s}
@@ -351,26 +378,37 @@ mark{background:#fef08a;border-radius:2px;padding:0 2px;color:inherit}
   </div>
 </div>
 <div class="ctrl">
-  <div class="srch">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-    <input type="text" id="q" placeholder="이름 또는 학교 검색…">
+  <div class="ctrl-top">
+    <div class="srch">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="q" placeholder="이름·학교·내용 검색…">
+    </div>
+    <div class="vtabs">
+      <button class="vtab on" onclick="setView('card')">시간표</button>
+      <button class="vtab" onclick="setView('table')">표</button>
+      <button class="vtab conflict-tab" onclick="setView('conflict')">⚠ 충돌</button>
+      <button class="vtab" onclick="setView('miss')">미제출</button>
+    </div>
+    <div class="dchips" id="dchips">
+      <span class="dchips-label">요일</span>
+      <button class="dchip" data-d="월" onclick="toggleDay('월')">월</button>
+      <button class="dchip" data-d="화" onclick="toggleDay('화')">화</button>
+      <button class="dchip" data-d="수" onclick="toggleDay('수')">수</button>
+      <button class="dchip" data-d="목" onclick="toggleDay('목')">목</button>
+      <button class="dchip" data-d="금" onclick="toggleDay('금')">금</button>
+      <button class="dchip" data-d="토" onclick="toggleDay('토')">토</button>
+      <button class="dchip" data-d="일" onclick="toggleDay('일')">일</button>
+    </div>
+    <span class="rcnt" id="rcnt"></span>
   </div>
-  <div class="vtabs">
-    <button class="vtab on" onclick="setView('card')">시간표</button>
-    <button class="vtab" onclick="setView('table')">표</button>
-    <button class="vtab conflict-tab" onclick="setView('conflict')">⚠ 충돌</button>
-    <button class="vtab" onclick="setView('miss')">미제출</button>
+  <!-- 학생 이름 다중 필터 -->
+  <div class="name-filter-wrap" id="name-filter-wrap">
+    <div class="name-filter-head">
+      <span class="name-filter-label">학생 필터</span>
+      <button class="name-filter-clear" id="name-filter-clear" onclick="clearNames()" style="display:none">✕ 선택 해제</button>
+    </div>
+    <div class="name-filter-chips" id="name-filter-chips"></div>
   </div>
-  <div class="dchips" id="dchips">
-    <button class="dchip" data-d="월" onclick="toggleDay('월')">월</button>
-    <button class="dchip" data-d="화" onclick="toggleDay('화')">화</button>
-    <button class="dchip" data-d="수" onclick="toggleDay('수')">수</button>
-    <button class="dchip" data-d="목" onclick="toggleDay('목')">목</button>
-    <button class="dchip" data-d="금" onclick="toggleDay('금')">금</button>
-    <button class="dchip" data-d="토" onclick="toggleDay('토')">토</button>
-    <button class="dchip" data-d="일" onclick="toggleDay('일')">일</button>
-  </div>
-  <span class="rcnt" id="rcnt"></span>
 </div>
 <div class="legend" id="legend">
   <span style="font-size:11px;color:var(--ink3);font-weight:700;margin-right:4px">범례</span>
@@ -610,10 +648,38 @@ function buildBlock(blk,we){
 }
 function buildCard(s,idx){
   const col=acolor(s.name),Q_=document.getElementById('q').value.trim();
+  // 요일 선택 시: 해당 요일 하나만 전체 너비로 표시
+  if(activeDay){
+    const isWE=DAYS_WE.includes(activeDay);
+    const h=totalH(isWE);
+    const guide=buildGuides(isWE);
+    const ax=buildAxis(isWE);
+    const blks=s.blocks[activeDay]||[];
+    const evH=blks.map(b=>buildBlock(b,isWE)).join('');
+    const dayCol=`<div class="day-col day-col-focus" data-d="${activeDay}">
+      <div class="dhead dhead-${activeDay}">${activeDay}요일</div>
+      <div class="dcol-body" style="height:${h}px">${guide}${blks.length?evH:'<div class="day-empty">일정 없음</div>'}</div>
+    </div>`;
+    return `<div class="scard scard-focus ${s.conflict?'conflict-card':''}" style="animation-delay:${idx*.02}s">
+      <div class="chead chead-sm">
+        <div class="avatar" style="background:${col}">${s.name[0]}</div>
+        <div class="cname">${hl(s.name,Q_)}</div>
+        ${s.school?`<div class="cschool">${hl(s.school,Q_)}</div>`:''}
+      </div>
+      <div class="tt-body">
+        <div class="tt-section" style="flex:1">
+          <div class="tt-row">
+            <div class="tt-axis" style="height:${h}px">${ax.html}</div>
+            <div class="tt-cols">${dayCol}</div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }
+  // 전체 뷰
   const wdH=totalH(false),weH=totalH(true);
   const guideWD=buildGuides(false),guideWE=buildGuides(true);
   const axWD=buildAxis(false),axWE=buildAxis(true);
-
   const wdCols=DAYS_WD.map(d=>{
     const blks=s.blocks[d]||[];
     const evH=blks.map(b=>buildBlock(b,false)).join('');
@@ -624,7 +690,6 @@ function buildCard(s,idx){
     const evH=blks.map(b=>buildBlock(b,true)).join('');
     return `<div class="day-col" data-d="${d}"><div class="dhead">${d}</div><div class="dcol-body" style="height:${weH}px">${guideWE}${blks.length?evH:'<div class="day-empty">—</div>'}</div></div>`;
   }).join('');
-
   return `<div class="scard ${s.conflict?'conflict-card':''}" style="animation-delay:${idx*.02}s">
     <div class="chead">
       <div class="avatar" style="background:${col}">${s.name[0]}</div>
@@ -650,17 +715,45 @@ function buildCard(s,idx){
     </div>
   </div>`;
 }
-let view='card',activeDay=null,Q='';
+
+let view='card', activeDay=null, Q='', selectedNames=new Set();
+
 function getList(){
   const q=Q.toLowerCase();
   return DATA.submitted.filter(s=>{
-    const nm=s.name.includes(q),sc=(s.school||'').toLowerCase().includes(q);
+    const nm=s.name.toLowerCase().includes(q);
+    const sc=(s.school||'').toLowerCase().includes(q);
     const ct=ALL_DAYS.map(d=>s[d]||'').join(' ').toLowerCase().includes(q);
-    const df=!activeDay||((s.blocks[activeDay]||[]).length>0);
-    const cf=view!=='conflict'||s.conflict;
-    return(nm||sc||ct)&&df&&cf;
+    const textMatch=(nm||sc||ct);
+    // 다중 이름 필터: 선택된 이름이 있으면 그 중 하나여야 함
+    const nameMatch=selectedNames.size===0||selectedNames.has(s.name);
+    // 요일 필터: 해당 요일에 블록이 있어야 함
+    const dayMatch=!activeDay||(s.blocks[activeDay]||[]).length>0;
+    const conflictMatch=view!=='conflict'||s.conflict;
+    return textMatch&&nameMatch&&dayMatch&&conflictMatch;
   });
 }
+function renderNameFilter(){
+  const box=document.getElementById('name-filter-chips');
+  if(!box)return;
+  box.innerHTML=DATA.submitted.map(s=>{
+    const on=selectedNames.has(s.name);
+    const col=acolor(s.name);
+    return `<button class="nchip${on?' on':''}" onclick="toggleName('${s.name}')" style="${on?`background:${col};color:#fff;border-color:${col}`:''}">
+      ${s.name}${s.school?`<span class="nchip-school">${s.school}</span>`:''}
+    </button>`;
+  }).join('');
+  // 초기화 버튼
+  document.getElementById('name-filter-clear').style.display=selectedNames.size>0?'':'none';
+}
+function toggleName(name){
+  if(selectedNames.has(name))selectedNames.delete(name);
+  else selectedNames.add(name);
+  renderNameFilter();
+  render();
+}
+function clearNames(){selectedNames.clear();renderNameFilter();render();}
+
 function render(){
   const isCard=view==='card'||view==='conflict';
   document.getElementById('view-card').style.display=isCard?'':'none';
@@ -668,18 +761,19 @@ function render(){
   document.getElementById('view-miss').style.display=view==='miss'?'':'none';
   document.getElementById('legend').style.display=isCard?'':'none';
   document.getElementById('dchips').style.visibility=view==='miss'?'hidden':'';
+  document.getElementById('name-filter-wrap').style.display=view==='miss'?'none':'';
   if(view==='card'||view==='conflict'){
     const list=getList();
     document.getElementById('rcnt').textContent=list.length+'명';
-    document.getElementById('n-ok').textContent=list.length;
-    document.getElementById('cgrid').innerHTML=list.length?list.map((s,i)=>buildCard(s,i)).join(''):'<div class="empty">검색 결과 없음</div>';
+    const grid=document.getElementById('cgrid');
+    grid.classList.toggle('focus-grid',!!activeDay);
+    grid.innerHTML=list.length?list.map((s,i)=>buildCard(s,i)).join(''):'<div class="empty">검색 결과 없음</div>';
     bindTips();
   }else if(view==='table'){
     const list=getList();
     document.getElementById('rcnt').textContent=list.length+'명';
-    document.getElementById('n-ok').textContent=list.length;
     const days=activeDay?[activeDay]:ALL_DAYS;
-    const hd=`<thead><tr><th>학생</th><th>학교</th>${days.map(d=>`<th data-d="${d}">${d}요일</th>`).join('')}</tr></thead>`;
+    const hd=`<thead><tr><th>학생</th><th>학교</th>${days.map(d=>`<th>${d}요일</th>`).join('')}</tr></thead>`;
     const bd=`<tbody>${list.map(s=>`<tr><td>${hl(s.name,Q)}</td><td style="color:var(--ink3);font-size:12px">${hl(s.school||'—',Q)}</td>${days.map(d=>{const v=s[d]||'';const e=!v||v==='없음'||v==='X';return`<td class="${e?'td-e':''}">${e?'—':hl(v,Q)}</td>`}).join('')}</tr>`).join('')}</tbody>`;
     document.getElementById('tbl').innerHTML=hd+bd;
   }else{
@@ -698,7 +792,11 @@ function bindTips(){
   });
 }
 function setView(v){view=v;document.querySelectorAll('.vtab').forEach((b,i)=>b.classList.toggle('on',['card','table','conflict','miss'][i]===v));render()}
-function toggleDay(d){activeDay=activeDay===d?null:d;document.querySelectorAll('.dchip').forEach(c=>c.classList.toggle('on',c.dataset.d===activeDay));render()}
+function toggleDay(d){
+  activeDay=activeDay===d?null:d;
+  document.querySelectorAll('.dchip').forEach(c=>c.classList.toggle('on',c.dataset.d===activeDay));
+  render();
+}
 document.getElementById('q').addEventListener('input',e=>{Q=e.target.value.trim();render()});
 
 // ── 입력 탭 전환 ──
@@ -771,6 +869,11 @@ function copyPrompt(){
 }
 document.getElementById('promptOverlay').style.display='none';
 
+// 카드 그리드 집중뷰 전환
+const cgrid=document.getElementById('cgrid');
+const _origRender=render;
+
+renderNameFilter();
 render();
 </script>
 </body>
