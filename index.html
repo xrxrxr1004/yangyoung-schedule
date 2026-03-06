@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>양영학원 학생 시간표 2026년 3월</title>
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&family=Noto+Sans+KR:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --c-mon:#1d4ed8;--bg-mon:#eff6ff;--bd-mon:#bfdbfe;
+  --c-tue:#0f766e;--bg-tue:#f0fdfa;--bd-tue:#99f6e4;
+  --c-wed:#7c3aed;--bg-wed:#faf5ff;--bd-wed:#ddd6fe;
+  --c-thu:#b45309;--bg-thu:#fffbeb;--bd-thu:#fde68a;
+  --c-fri:#be123c;--bg-fri:#fff1f2;--bd-fri:#fecdd3;
+  --c-sat:#0369a1;--bg-sat:#f0f9ff;--bd-sat:#bae6fd;
+  --c-sun:#7e22ce;--bg-sun:#fdf4ff;--bd-sun:#e9d5ff;
+  --school:#e2e8f0;--school-t:#334155;
+  --math:#dbeafe;--math-t:#1e40af;
+  --kor:#fce7f3;--kor-t:#9d174d;
+  --eng:#cffafe;--eng-t:#155e75;
+  --sci:#dcfce7;--sci-t:#14532d;
+  --exer:#fef9c3;--exer-t:#713f12;
+  --other:#f3f4f6;--other-t:#374151;
+  --ink:#0f172a;--ink2:#334155;--ink3:#64748b;--ink4:#94a3b8;--ink5:#cbd5e1;
+  --bg:#f1f5f9;--card:#ffffff;--line:#e2e8f0;
+  --radius:14px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:'Noto Sans KR',sans-serif;font-size:14px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.wrap{max-width:1540px;margin:0 auto;padding:36px 20px 80px}
+.pg-head{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:16px;padding-bottom:18px;border-bottom:3px solid var(--ink);margin-bottom:26px}
+.kicker{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--ink3);margin-bottom:6px}
+h1{font-family:'Nanum Myeongjo',serif;font-size:34px;font-weight:800;line-height:1}
+h1 em{font-style:normal;color:var(--c-mon)}
+.sub{font-size:12px;color:var(--ink3);margin-top:5px;font-weight:300}
+.head-right{display:flex;flex-direction:column;align-items:flex-end;gap:10px}
+.badges{display:flex;gap:8px}
+.badge{display:flex;align-items:center;gap:6px;padding:5px 13px;border-radius:100px;font-size:12px;font-weight:500;border:1.5px solid}
+.badge.ok{color:#166534;border-color:#166534;background:#f0fdf4}
+.badge.mis{color:#991b1b;border-color:#991b1b;background:#fff1f2}
+.badge strong{font-size:15px;font-weight:700}
+.print-btn{background:var(--ink);color:#fff;border:none;cursor:pointer;padding:9px 20px;border-radius:8px;font-size:13px;font-family:inherit;font-weight:600;display:flex;align-items:center;gap:6px;transition:background .15s}
+.print-btn:hover{background:var(--c-mon)}
+.ctrl{display:flex;flex-wrap:wrap;gap:10px;align-items:center;background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:12px 16px;margin-bottom:16px}
+.srch{position:relative;flex:0 0 210px}
+.srch svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--ink4);pointer-events:none}
+.srch input{width:100%;padding:8px 12px 8px 33px;border:1.5px solid var(--line);border-radius:8px;font-size:13px;font-family:inherit;color:var(--ink);outline:none;background:var(--bg);transition:border-color .2s}
+.srch input:focus{border-color:var(--c-mon);background:#fff}
+.srch input::placeholder{color:var(--ink4)}
+.vtabs{display:flex;gap:3px;background:var(--bg);border-radius:8px;padding:3px}
+.vtab{padding:6px 14px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;border:none;background:none;font-family:inherit;color:var(--ink3);transition:all .15s}
+.vtab.on{background:var(--ink);color:#fff}
+.dchips{display:flex;gap:5px;flex-wrap:wrap}
+.dchip{padding:5px 12px;border-radius:100px;font-size:11px;font-weight:700;border:1.5px solid;cursor:pointer;transition:all .12s;background:#fff;letter-spacing:.3px}
+.dchip[data-d="월"]{color:var(--c-mon);border-color:var(--bd-mon)}.dchip.on[data-d="월"]{background:var(--c-mon);color:#fff;border-color:var(--c-mon)}
+.dchip[data-d="화"]{color:var(--c-tue);border-color:var(--bd-tue)}.dchip.on[data-d="화"]{background:var(--c-tue);color:#fff;border-color:var(--c-tue)}
+.dchip[data-d="수"]{color:var(--c-wed);border-color:var(--bd-wed)}.dchip.on[data-d="수"]{background:var(--c-wed);color:#fff;border-color:var(--c-wed)}
+.dchip[data-d="목"]{color:var(--c-thu);border-color:var(--bd-thu)}.dchip.on[data-d="목"]{background:var(--c-thu);color:#fff;border-color:var(--c-thu)}
+.dchip[data-d="금"]{color:var(--c-fri);border-color:var(--bd-fri)}.dchip.on[data-d="금"]{background:var(--c-fri);color:#fff;border-color:var(--c-fri)}
+.dchip[data-d="토"]{color:var(--c-sat);border-color:var(--bd-sat)}.dchip.on[data-d="토"]{background:var(--c-sat);color:#fff;border-color:var(--c-sat)}
+.dchip[data-d="일"]{color:var(--c-sun);border-color:var(--bd-sun)}.dchip.on[data-d="일"]{background:var(--c-sun);color:#fff;border-color:var(--c-sun)}
+.rcnt{margin-left:auto;font-size:11px;color:var(--ink4);font-family:'DM Mono',monospace}
+.legend{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;align-items:center;padding:10px 14px;background:#fff;border-radius:10px;border:1px solid var(--line)}
+.legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--ink2)}
+.legend-dot{width:12px;height:12px;border-radius:3px;flex-shrink:0}
+/* 한 줄 리스트 */
+.card-grid{display:flex;flex-direction:column;gap:6px}
+.scard{background:var(--card);border-radius:10px;border:1.5px solid var(--line);overflow:hidden;
+       box-shadow:0 1px 3px rgba(0,0,0,.05);animation:up .2s ease both;
+       display:flex;flex-direction:row;align-items:stretch}
+.scard:hover{box-shadow:0 2px 10px rgba(0,0,0,.1)}
+.vtab.conflict-tab{color:#b45309}
+.vtab.conflict-tab.on{background:#f59e0b;color:#fff}
+.conflict-card{border-color:#f59e0b!important;box-shadow:0 0 0 2px #fef08a!important}
+.conflict-card .chead{background:#fffbeb}
+@keyframes up{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* 이름 패널 (고정 너비) */
+.chead{flex:0 0 96px;display:flex;flex-direction:column;justify-content:center;align-items:center;
+       gap:5px;padding:8px 6px;border-right:1.5px solid var(--line);background:#fafafa;text-align:center}
+.avatar{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+        font-family:'Nanum Myeongjo',serif;font-size:13px;font-weight:800;color:#fff;flex-shrink:0}
+.cname{font-size:12px;font-weight:700;color:var(--ink);line-height:1.2}
+.cschool{font-size:9px;color:var(--ink3)}
+.cdate{font-family:'DM Mono',monospace;font-size:8px;color:var(--ink4);margin-top:1px}
+
+/* 시간표 영역 */
+.tt-body{flex:1;display:flex;min-width:0}
+
+/* 평일/주말 섹션 */
+.tt-section{display:flex;flex-direction:column;border-right:2px solid var(--line)}
+.tt-section:last-child{border-right:none;flex:1}
+.tt-section-label{font-size:7.5px;font-weight:700;color:var(--ink4);letter-spacing:1px;
+                  padding:2px 5px;background:#f8fafc;border-bottom:1px solid var(--line);
+                  white-space:nowrap}
+.tt-row{display:flex;flex:1}
+.tt-axis{flex:0 0 20px;position:relative;background:#fafafa;border-right:1px solid var(--line)}
+.tt-axis-tick{position:absolute;right:2px;transform:translateY(-50%);font-size:6.5px;
+              color:#94a3b8;font-family:'DM Mono',monospace;line-height:1}
+.tt-cols{display:flex;flex:1}
+
+/* 요일 컬럼 */
+.day-col{flex:1;border-right:1px solid var(--line);display:flex;flex-direction:column;min-width:0}
+.day-col:last-child{border-right:none}
+.dhead{text-align:center;padding:3px 1px;font-size:8.5px;font-weight:800;letter-spacing:.3px;
+       border-bottom:2px solid;flex-shrink:0}
+.day-col[data-d="월"] .dhead{color:var(--c-mon);background:var(--bg-mon);border-color:var(--c-mon)}
+.day-col[data-d="화"] .dhead{color:var(--c-tue);background:var(--bg-tue);border-color:var(--c-tue)}
+.day-col[data-d="수"] .dhead{color:var(--c-wed);background:var(--bg-wed);border-color:var(--c-wed)}
+.day-col[data-d="목"] .dhead{color:var(--c-thu);background:var(--bg-thu);border-color:var(--c-thu)}
+.day-col[data-d="금"] .dhead{color:var(--c-fri);background:var(--bg-fri);border-color:var(--c-fri)}
+.day-col[data-d="토"] .dhead{color:var(--c-sat);background:var(--bg-sat);border-color:var(--c-sat)}
+.day-col[data-d="일"] .dhead{color:var(--c-sun);background:var(--bg-sun);border-color:var(--c-sun)}
+.dcol-body{position:relative;flex:1}
+.hline{position:absolute;left:0;right:0;height:1px;background:var(--line);pointer-events:none}
+.hline.hr{background:#d1d5db}
+.ev-block{position:absolute;left:1px;right:1px;border-radius:3px;padding:1px 3px;font-size:8px;
+          font-weight:600;line-height:1.2;overflow:hidden;z-index:1;cursor:default;transition:filter .12s}
+.ev-block:hover{filter:brightness(.9);z-index:10}
+.ev-block.school{background:var(--school);color:var(--school-t)}
+.ev-block.math{background:var(--math);color:var(--math-t)}
+/* (중복 제거 — 위에서 재정의됨) */
+.dcol-body{position:relative}
+.hline{position:absolute;left:0;right:0;height:1px;background:var(--line);pointer-events:none}
+.hline.hr{background:#d1d5db}
+.ev-block{position:absolute;left:1px;right:1px;border-radius:3px;padding:1px 3px;font-size:8px;font-weight:600;line-height:1.2;overflow:hidden;z-index:1;cursor:default;transition:filter .12s}
+.ev-block:hover{filter:brightness(.9);z-index:10}
+.ev-block.school{background:var(--school);color:var(--school-t)}
+.ev-block.math{background:var(--math);color:var(--math-t)}
+.ev-block.korean{background:var(--kor);color:var(--kor-t)}
+.ev-block.english{background:var(--eng);color:var(--eng-t)}
+.ev-block.science{background:var(--sci);color:var(--sci-t)}
+.ev-block.exercise{background:var(--exer);color:var(--exer-t)}
+.ev-block.other{background:var(--other);color:var(--other-t)}
+.ev-block.eng_jinhak{background:#a5f3fc;color:#0c4a6e;border:1.5px solid #22d3ee;font-weight:700}
+.ev-block.eng_conflict{background:#fef08a;color:#713f12;border:2px dashed #f59e0b;font-weight:700}
+.ev-label{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;width:100%}
+.day-empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--ink5)}
+.weekend-sep{border-top:2px solid var(--line)}
+.tooltip{position:fixed;background:#1e293b;color:#fff;border-radius:6px;padding:6px 10px;font-size:11px;line-height:1.5;pointer-events:none;z-index:9999;max-width:200px;box-shadow:0 4px 12px rgba(0,0,0,.25);display:none}
+#view-table{display:none}
+.tbl-wrap{background:#fff;border-radius:var(--radius);border:1.5px solid var(--line);overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+table{width:100%;border-collapse:collapse}
+thead tr{background:var(--bg);border-bottom:2px solid var(--line)}
+thead th{padding:11px 13px;text-align:left;font-size:11px;font-weight:700;white-space:nowrap}
+thead th:first-child,thead th:nth-child(2){color:var(--ink2)}
+thead th[data-d="월"]{color:var(--c-mon)}thead th[data-d="화"]{color:var(--c-tue)}
+thead th[data-d="수"]{color:var(--c-wed)}thead th[data-d="목"]{color:var(--c-thu)}
+thead th[data-d="금"]{color:var(--c-fri)}thead th[data-d="토"]{color:var(--c-sat)}
+thead th[data-d="일"]{color:var(--c-sun)}
+tbody tr{border-bottom:1px solid var(--line)}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:var(--bg)}
+tbody td{padding:10px 13px;vertical-align:top;font-size:12px;color:var(--ink2);line-height:1.5}
+tbody td:first-child{font-weight:700;color:var(--ink);white-space:nowrap;font-size:13px}
+.td-e{color:var(--ink4)}
+#view-miss{display:none}
+.miss-box{background:#fff;border-radius:var(--radius);border:1.5px solid #fecaca;overflow:hidden}
+.miss-hd{background:#fff1f2;padding:15px 20px;border-bottom:1.5px solid #fecaca;display:flex;align-items:center;gap:8px}
+.miss-hd h2{font-size:14px;font-weight:700;color:#991b1b}
+.miss-cnt{background:#dc2626;color:#fff;font-size:11px;font-weight:700;padding:2px 8px;border-radius:100px}
+.miss-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:7px;padding:18px}
+.miss-chip{text-align:center;padding:8px 10px;border-radius:7px;background:var(--bg);border:1px solid var(--line);font-size:12px;font-weight:500;color:var(--ink2);transition:background .12s;animation:up .15s ease both}
+.miss-chip:hover{background:#fee2e2;border-color:#fca5a5}
+.empty{text-align:center;padding:48px;color:var(--ink4)}
+mark{background:#fef08a;border-radius:2px;padding:0 2px;color:inherit}
+
+/* ── CSV 업로드 드롭존 ── */
+.upload-area{border:2px dashed var(--line);border-radius:12px;padding:20px 24px;margin-bottom:16px;
+  background:#fff;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:14px}
+.upload-area:hover,.upload-area.drag{border-color:#3b82f6;background:#eff6ff}
+.upload-area.drag{border-style:solid}
+.upload-icon{width:36px;height:36px;border-radius:9px;background:#eff6ff;display:flex;align-items:center;
+  justify-content:center;flex-shrink:0;color:#3b82f6}
+.upload-text strong{display:block;font-size:13px;font-weight:700;color:var(--ink);margin-bottom:2px}
+.upload-text span{font-size:11px;color:var(--ink3)}
+.upload-input{display:none}
+
+/* ── 파싱 진행 오버레이 ── */
+.parse-overlay{position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:100;
+  display:flex;align-items:center;justify-content:center;display:none}
+.parse-modal{background:#fff;border-radius:16px;padding:32px 40px;min-width:340px;
+  box-shadow:0 20px 60px rgba(0,0,0,.2);text-align:center}
+.parse-modal h3{font-size:16px;font-weight:700;margin-bottom:6px;color:var(--ink)}
+.parse-modal p{font-size:12px;color:var(--ink3);margin-bottom:20px}
+.parse-bar-wrap{background:#f1f5f9;border-radius:100px;height:8px;overflow:hidden;margin-bottom:12px}
+.parse-bar{height:100%;background:linear-gradient(90deg,#3b82f6,#06b6d4);border-radius:100px;
+  width:0;transition:width .3s}
+.parse-log{font-size:11px;color:var(--ink4);font-family:'DM Mono',monospace;
+  max-height:120px;overflow-y:auto;text-align:left;line-height:1.7}
+.parse-log .ok{color:#16a34a} .parse-log .skip{color:#94a3b8} .parse-log .err{color:#dc2626}
+.parse-done-btn{margin-top:18px;background:var(--ink);color:#fff;border:none;cursor:pointer;
+  padding:9px 24px;border-radius:8px;font-size:13px;font-family:inherit;font-weight:600;display:none}
+
+/* ── 입력 패널 ── */
+.input-panel{background:#fff;border:1.5px solid var(--line);border-radius:14px;margin-bottom:16px;overflow:hidden}
+.input-tabs{display:flex;border-bottom:1.5px solid var(--line);background:#f8fafc}
+.itab{padding:10px 20px;border:none;background:none;font-size:12px;font-weight:600;color:var(--ink3);
+  cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1.5px;font-family:inherit;transition:all .15s}
+.itab.on{color:var(--ink);border-bottom-color:var(--ink)}
+.itab:hover:not(.on){color:var(--ink2);background:#f1f5f9}
+.itab-body{padding:16px 18px}
+.text-input-row{display:flex;gap:12px}
+.text-input-col{display:flex;flex-direction:column;gap:4px}
+.text-input-col.flex1{flex:1}
+.input-label{font-size:11px;font-weight:700;color:var(--ink3);letter-spacing:.03em}
+.name-input{padding:7px 11px;border:1.5px solid var(--line);border-radius:7px;font-size:13px;
+  font-family:inherit;outline:none;color:var(--ink);width:140px;transition:border .15s}
+.name-input:focus{border-color:#3b82f6}
+.text-input-col.flex1 .name-input{width:100%}
+.sched-textarea{width:100%;height:130px;padding:10px 12px;border:1.5px solid var(--line);border-radius:8px;
+  font-size:12px;font-family:'DM Mono',monospace;color:var(--ink);resize:vertical;outline:none;
+  line-height:1.7;margin-top:4px;transition:border .15s}
+.sched-textarea:focus{border-color:#3b82f6}
+.text-actions{display:flex;gap:8px;margin-top:10px;justify-content:space-between;align-items:center}
+.prompt-btn{padding:7px 14px;border:1.5px solid var(--line);border-radius:7px;background:#fff;
+  font-size:12px;font-weight:600;color:var(--ink3);cursor:pointer;font-family:inherit;transition:all .15s}
+.prompt-btn:hover{border-color:#3b82f6;color:#3b82f6}
+.apply-btn{padding:8px 20px;background:var(--ink);color:#fff;border:none;border-radius:8px;
+  font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .15s}
+.apply-btn:hover{background:#1e293b}
+.apply-result{font-size:12px;padding:8px 12px;border-radius:7px;margin-top:8px;display:none}
+.apply-result.ok{background:#f0fdf4;color:#15803d;border:1px solid #bbf7d0}
+.apply-result.err{background:#fef2f2;color:#dc2626;border:1px solid #fecaca}
+
+/* ── Claude 프롬프트 모달 ── */
+.prompt-overlay{position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:200;
+  display:flex;align-items:center;justify-content:center}
+.prompt-modal{background:#fff;border-radius:16px;width:min(560px,92vw);
+  box-shadow:0 20px 60px rgba(0,0,0,.2);overflow:hidden}
+.prompt-modal-head{display:flex;justify-content:space-between;align-items:center;
+  padding:16px 20px;border-bottom:1.5px solid var(--line);background:#f8fafc}
+.prompt-modal-head strong{font-size:14px;color:var(--ink)}
+.prompt-desc{font-size:12px;color:var(--ink3);padding:12px 20px 0;line-height:1.6}
+.prompt-box{margin:10px 20px;padding:14px 16px;background:#f1f5f9;border-radius:8px;
+  font-size:12px;font-family:'DM Mono',monospace;line-height:1.8;color:var(--ink2);
+  white-space:pre-wrap;max-height:280px;overflow-y:auto;border:1.5px solid var(--line)}
+.copy-prompt-btn{display:block;margin:12px 20px 16px;padding:9px 20px;background:#3b82f6;
+  color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;
+  font-family:inherit;transition:background .15s}
+.copy-prompt-btn:hover{background:#2563eb}
+@media print{
+  @page{size:A4 portrait;margin:10mm 8mm}
+  body{background:#fff}
+  .wrap{padding:0;max-width:100%}
+  .ctrl,.print-btn,.legend{display:none!important}
+  #view-card{display:block!important}
+  #view-table,#view-miss{display:none!important}
+  .pg-head{margin-bottom:10px;padding-bottom:8px}
+  h1{font-size:20px}
+  .card-grid{gap:5px}
+  .scard{break-inside:avoid;box-shadow:none!important;border:1.5px solid #d1d5db!important;animation:none!important;transform:none!important}
+  .chead{flex:0 0 80px}
+  .dhead{padding:2px 1px;font-size:7.5px}
+  .ev-block{font-size:6.5px;padding:1px 2px}
+  .cname{font-size:10px}
+  .avatar{width:24px;height:24px;font-size:11px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="pg-head">
+  <div>
+    <div class="kicker">양영학원 · Schedule Dashboard</div>
+    <h1>학생 <em>시간표</em></h1>
+    <p class="sub">2026년 3월 이후 카카오톡 상담 기록 기준 · 최신 제출본 반영</p>
+  </div>
+  <div class="head-right">
+    <div class="badges">
+      <div class="badge ok"><strong id="n-ok">23</strong>명 제출</div>
+      <div class="badge mis"><strong id="n-mis">49</strong>명 미제출</div>
+    </div>
+    <button class="print-btn" onclick="window.print()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+      인쇄 / PDF
+    </button>
+  </div>
+</header>
+
+<!-- 입력 패널 -->
+<div class="input-panel">
+  <div class="input-tabs">
+    <button class="itab on" onclick="switchInputTab('text')">✏️ 텍스트 붙여넣기</button>
+    <button class="itab" onclick="switchInputTab('csv')">📄 CSV 업로드</button>
+  </div>
+
+  <!-- 텍스트 탭 -->
+  <div class="itab-body" id="tab-text">
+    <div class="text-input-row">
+      <div class="text-input-col">
+        <label class="input-label">학생 이름</label>
+        <input type="text" id="txtName" placeholder="예: 정하율" class="name-input">
+      </div>
+      <div class="text-input-col flex1">
+        <label class="input-label">학교 (선택)</label>
+        <input type="text" id="txtSchool" placeholder="예: 충남고" class="name-input">
+      </div>
+    </div>
+    <label class="input-label" style="margin-top:10px;display:block">시간표 (Claude 변환 결과 붙여넣기)</label>
+    <textarea id="txtSchedule" class="sched-textarea" placeholder="월: 학교야자(9시)&#10;화: 학교야자(9시)&#10;수: 학교야자(9시)&#10;목: 학교야자(9시)&#10;금: 학교(4시), 수학과외(집근처) 9시-11시30분&#10;토: 통합사회(대훈) 1시-4시, 수학과외(집근처) 9시-11시30분&#10;일: 국어(대훈) 1시-4시"></textarea>
+    <div class="text-actions">
+      <button class="prompt-btn" onclick="showPrompt()">📋 Claude 변환 프롬프트 보기</button>
+      <button class="apply-btn" onclick="applyTextInput()">시간표 적용 →</button>
+    </div>
+  </div>
+
+  <!-- CSV 탭 -->
+  <div class="itab-body" id="tab-csv" style="display:none">
+    <div class="upload-area" id="dropzone" onclick="document.getElementById('csvInput').click()">
+      <div class="upload-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      </div>
+      <div class="upload-text">
+        <strong>카카오톡 CSV 드롭 또는 클릭하여 업로드</strong>
+        <span>진학학원_이름.csv 형식 · 여러 파일 동시 가능 · 기존 데이터에 병합됩니다</span>
+      </div>
+      <input type="file" id="csvInput" class="upload-input" accept=".csv" multiple>
+    </div>
+  </div>
+</div>
+
+<!-- Claude 프롬프트 모달 -->
+<div class="prompt-overlay" id="promptOverlay" onclick="if(event.target===this)closePrompt()">
+  <div class="prompt-modal">
+    <div class="prompt-modal-head">
+      <strong>Claude 변환 프롬프트</strong>
+      <button onclick="closePrompt()" style="background:none;border:none;cursor:pointer;font-size:18px;color:var(--ink3)">×</button>
+    </div>
+    <p class="prompt-desc">아래 프롬프트를 Claude에 먼저 보내고, 이어서 학생의 카톡 내용을 붙여넣으세요.</p>
+    <div class="prompt-box" id="promptBox">다음 학생의 시간표를 아래 형식으로 변환해줘. 다른 말 없이 변환 결과만 출력해.
+
+【형식 규칙】
+- 각 줄은 반드시 "요일: 내용" 형식
+- 요일은 월/화/수/목/금/토/일 중 하나
+- 학교 종료 시간은 반드시 명시: 학교(4시), 학교야자(9시), 학교오자(6시) 등
+- 시간은 반드시 "X시-Y시" 또는 "X시Y분-Y시Z분" 형식으로 통일
+- "월과 동일", "위와 같음" 등 참조 표현 금지 → 내용 직접 기재
+- 일정 없으면: 없음
+- 여러 일정은 쉼표로 구분
+
+【출력 예시】
+월: 학교야자(9시)
+화: 학교야자(9시), 수학학원(둔산동) 7시30분-10시
+수: 학교(4시), 국어학원(둔산동) 5시-8시
+목: 학교야자(9시)
+금: 학교(3시), 영어과외(집근처) 7시-9시
+토: 수학학원(둔산동) 2시-5시
+일: 없음</div>
+    <button class="copy-prompt-btn" onclick="copyPrompt()">📋 프롬프트 복사</button>
+  </div>
+</div>
+<div class="ctrl">
+  <div class="srch">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input type="text" id="q" placeholder="이름 또는 학교 검색…">
+  </div>
+  <div class="vtabs">
+    <button class="vtab on" onclick="setView('card')">시간표</button>
+    <button class="vtab" onclick="setView('table')">표</button>
+    <button class="vtab conflict-tab" onclick="setView('conflict')">⚠ 충돌</button>
+    <button class="vtab" onclick="setView('miss')">미제출</button>
+  </div>
+  <div class="dchips" id="dchips">
+    <button class="dchip" data-d="월" onclick="toggleDay('월')">월</button>
+    <button class="dchip" data-d="화" onclick="toggleDay('화')">화</button>
+    <button class="dchip" data-d="수" onclick="toggleDay('수')">수</button>
+    <button class="dchip" data-d="목" onclick="toggleDay('목')">목</button>
+    <button class="dchip" data-d="금" onclick="toggleDay('금')">금</button>
+    <button class="dchip" data-d="토" onclick="toggleDay('토')">토</button>
+    <button class="dchip" data-d="일" onclick="toggleDay('일')">일</button>
+  </div>
+  <span class="rcnt" id="rcnt"></span>
+</div>
+<div class="legend" id="legend">
+  <span style="font-size:11px;color:var(--ink3);font-weight:700;margin-right:4px">범례</span>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--school)"></div>학교/자습</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--math)"></div>수학</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--kor)"></div>국어</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--eng)"></div>영어/외국어</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--sci)"></div>과학/사탐</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--exer)"></div>운동</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--other)"></div>기타</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#a5f3fc;border:1.5px solid #22d3ee"></div>영어(진학·지정)</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#fef08a;border:2px dashed #f59e0b"></div>⚠ 시간 충돌</div>
+  <span style="margin-left:auto;font-size:10px;color:var(--ink4)">블록에 마우스를 올리면 상세 시간이 표시됩니다</span>
+</div>
+<div id="view-card"><div class="card-grid" id="cgrid"></div></div>
+<div id="view-table"><div class="tbl-wrap"><table id="tbl"></table></div></div>
+<div id="view-miss">
+  <div class="miss-box">
+    <div class="miss-hd"><h2>시간표 미제출</h2><span class="miss-cnt" id="mcnt">49</span></div>
+    <div class="miss-grid" id="mgrid"></div>
+  </div>
+</div>
+</div>
+<div class="tooltip" id="tip"></div>
+
+<!-- 파싱 진행 모달 -->
+<div class="parse-overlay" id="parseOverlay">
+  <div class="parse-modal">
+    <h3>CSV 파싱 중…</h3>
+    <p id="parseStatus">파일을 읽고 있습니다</p>
+    <div class="parse-bar-wrap"><div class="parse-bar" id="parseBar"></div></div>
+    <div class="parse-log" id="parseLog"></div>
+    <button class="parse-done-btn" id="parseDoneBtn" onclick="closeParse()">완료 · 닫기</button>
+  </div>
+</div>
+<script>
+// ── 지정학교 수업 시간 (분 단위) ──
+const JINHAK = {
+  '유성고':   [['월',1140,1230]],
+  '도안고':   [['월',1230,1320],['수',1140,1230]],
+  '충남고':   [['월',1230,1320]],
+  '둔원고':   [['화',1230,1320]],
+  '지족고':   [['화',1140,1230]],
+  '대성고':   [['목',1140,1230],['금',1230,1320]],
+  '외고':     [['금',1050,1140],['금',1140,1230]],
+  '대전외고': [['금',1050,1140],['금',1140,1230]],
+};
+
+// ── 파싱 엔진 ──
+function toMin(hStr, mStr, half) {
+  let h = parseInt(hStr), m = mStr ? parseInt(mStr) : (half ? 30 : 0);
+  if (h >= 1 && h <= 8) h += 12; // PM 보정
+  return h * 60 + m;
+}
+function classify(t) {
+  if (/학교|야자|오자|오후자습/.test(t)) return 'school';
+  if (/수학/.test(t)) return 'math';
+  if (/국어/.test(t)) return 'korean';
+  if (/영어|프랑스어|토피아/.test(t)) return 'english';
+  if (/과학|사탐|물리|화학|생물/.test(t)) return 'science';
+  if (/운동/.test(t)) return 'exercise';
+  if (/중국어/.test(t)) return 'chinese';
+  return 'other';
+}
+function parseBlocks(text) {
+  if (!text || /^(없음|X|-|\s*)$/.test(text.trim())) return [];
+  const blocks = [];
+  // 학교 종료 시간
+  const schoolM = text.match(/학교[가-힣\s]*[（(](\d{1,2})시(?:\s*(\d{2})분|([반])?)?[)）]/);
+  if (schoolM || /학교|야자|오자/.test(text)) {
+    let et = 960; // 기본 16:00
+    if (schoolM) {
+      const h = schoolM[1], min = schoolM[2], half = schoolM[3];
+      et = toMin(h, min, !!half && !min);
+    }
+    blocks.push([480, et, '학교', 'school']);
+  }
+  // 범위 시간 패턴: 8시-10시, 8:00-10:00, 8시30분-10시, 8시반-10시 등
+  const rangePat = /(\d{1,2})(?::(\d{2})|시\s*(\d{1,2})분?|시(반)?)\s*[-~]\s*(\d{1,2})(?::(\d{2})|시\s*(\d{1,2})분?|시(반)?)/g;
+  let m;
+  while ((m = rangePat.exec(text)) !== null) {
+    const [, sh, sc, sk, shalf, eh, ec, ek, ehalf] = m;
+    const st = toMin(sh, sc||sk, !!(shalf&&!sc&&!sk));
+    const et = toMin(eh, ec||ek, !!(ehalf&&!ec&&!ek));
+    // 레이블: 매치 앞 텍스트의 마지막 세그먼트
+    const pre = text.slice(0, m.index).trim();
+    const seg = pre.split(/[,/\n]/).pop().trim().replace(/\s*[（(][^)）]*[)）]\s*$/, '').trim();
+    const label = (seg && seg.length > 1 && !/^(없음|X)$/.test(seg)) ? seg.slice(-12) : '일정';
+    const cat = classify(label);
+    if (st < et) blocks.push([st, et, label, cat]);
+  }
+  return blocks;
+}
+function applyJinhak(student) {
+  const sc = student.school || '';
+  const classes = JINHAK[sc] || [];
+  let conflict = false;
+  classes.forEach(([day, st, et]) => {
+    const existing = student.blocks[day] || [];
+    const clash = existing.some(b => b[0] < et && b[1] > st);
+    if (clash) { conflict = true; student.blocks[day].push([st, et, '⚠ 영어(진학)', 'eng_conflict']); }
+    else { (student.blocks[day] = student.blocks[day] || []).push([st, et, '영어(진학)', 'eng_jinhak']); }
+  });
+  if (classes.length) student.has_jinhak = true;
+  if (conflict) student.conflict = true;
+  return student;
+}
+function guessName(filename) {
+  const base = filename.replace(/\.csv$/i, '');
+  const parts = base.split(/[_\-\s]+/);
+  const excl = ['학원','진학','양영','카카오','대화','채팅','톡'];
+  return parts.find(p => p.length >= 2 && !/^\d+$/.test(p) && !/^\(\d+\)$/.test(p) && !excl.some(e => p.includes(e))) || '';
+}
+function guessSchool(messages) {
+  const keywords = ['대전외고','외고','충남고','도안고','대성고','지족고','상산고','둔원고','노은고','전민고','봉명고','대신고','유성고','구봉고','원신흥중','한밭고','대전고','충여고'];
+  const text = messages.join(' ');
+  return keywords.find(k => text.includes(k)) || '';
+}
+function isScheduleMsg(msg) {
+  return msg.length > 20 && /[월화수목금토일]\s*[:：]/.test(msg);
+}
+function parseCSV(text) {
+  const lines = text.split(/\r?\n/);
+  const rows = [];
+  for (const line of lines) {
+    if (!line.trim()) continue;
+    // CSV 파싱 (따옴표 처리 포함)
+    const cols = [];
+    let cur = '', inQ = false;
+    for (let i = 0; i < line.length; i++) {
+      const c = line[i];
+      if (c === '"') { inQ = !inQ; continue; }
+      if (c === ',' && !inQ) { cols.push(cur); cur = ''; continue; }
+      cur += c;
+    }
+    cols.push(cur);
+    if (cols.length >= 3) rows.push({ date: cols[0].trim(), user: cols[1].trim(), msg: cols[2].trim() });
+  }
+  return rows;
+}
+function extractScheduleFromCSV(rows, studentName) {
+  const DAYS = ['월','화','수','목','금','토','일'];
+  // 2026-03-01 이후 메시지만
+  const cutoff = '2026-03-01';
+  // 학생이 보낸 메시지 중 시간표 패턴 있는 것만, 최신순
+  const schedMsgs = rows
+    .filter(r => r.date >= cutoff && r.user !== '진학학원' && isScheduleMsg(r.msg))
+    .sort((a, b) => b.date.localeCompare(a.date));
+  if (!schedMsgs.length) return null;
+  const best = schedMsgs[0];
+  const msgText = best.msg;
+  const date = best.date.slice(0, 10);
+  // 요일별 텍스트 파싱
+  const dayTexts = {};
+  const splitPat = /([월화수목금토일])\s*[:：]/g;
+  const parts = msgText.split(splitPat);
+  let curDay = null;
+  for (const part of parts) {
+    if (DAYS.includes(part)) { curDay = part; continue; }
+    if (curDay) { dayTexts[curDay] = part.split(/\n/)[0].trim(); curDay = null; }
+  }
+  if (!Object.keys(dayTexts).length) return null;
+  // 블록 파싱
+  const blocks = {};
+  DAYS.forEach(d => { blocks[d] = parseBlocks(dayTexts[d] || ''); });
+  // 학교 추출
+  const allMsgs = rows.map(r => r.msg);
+  const school = guessSchool(allMsgs);
+  const student = { name: studentName, school, date, blocks };
+  DAYS.forEach(d => { student[d] = dayTexts[d] || ''; });
+  return applyJinhak(student);
+}
+
+// ── localStorage 연동 ──
+const STORAGE_KEY = 'yangyoung_schedule_v1';
+function loadData() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      if (parsed.submitted && parsed.missing) return parsed;
+    }
+  } catch(e) {}
+  return null;
+}
+function saveData(data) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch(e) {}
+}
+function mergeStudent(data, newStudent) {
+  const idx = data.submitted.findIndex(s => s.name === newStudent.name);
+  if (idx >= 0) {
+    data.submitted[idx] = newStudent; // 덮어쓰기
+  } else {
+    data.submitted.push(newStudent);
+    data.missing = data.missing.filter(n => n !== newStudent.name);
+  }
+  data.submitted.sort((a, b) => a.name.localeCompare(b.name, 'ko'));
+}
+
+// ── 초기 데이터: localStorage 우선, 없으면 RAW ──
+const RAW_DEFAULT = {"submitted": [{"name": "강리호", "school": "유성고", "date": "2026-03-04", "월": "학교 (4시)", "화": "학교 (4시), 수학학원(둔산동) 8시 30분~ 10시 30분", "수": "학교(3시)", "목": "학교 (4시), 국어학원(둔산동) 5시 30분~8시 30분, 수학학원(둔산동) 8시 30분~10시30분", "금": "학교 (2시)", "토": "수학학원(둔산동) 1시~5시 30분, 수학학원 7시~10시", "일": "국어학원(둔산동) 12~3시, 과학학원(둔산동) 7시 30분~ 10시", "blocks": {"월": [[480, 960, "학교", "school"], [1140, 1230, "영어(진학)", "eng_jinhak"]], "화": [[480, 960, "학교", "school"], [1230, 1350, "수학학원", "math"]], "수": [[480, 900, "학교", "school"]], "목": [[480, 960, "학교", "school"], [1050, 1230, "국어학원", "korean"], [1230, 1350, "수학학원", "math"]], "금": [[480, 840, "학교", "school"]], "토": [[780, 1050, "수학학원", "math"], [1140, 1320, "수학학원", "math"]], "일": [[1170, 1320, "과학학원", "science"]]}, "has_jinhak": true}, {"name": "강채원", "school": "외고", "date": "2026-03-04", "월": "7:00-10:00 프랑스어 (외고 근처)", "화": "없음", "수": "7:30-10:30 수학 (둔산동)", "목": "없음", "금": "없음", "토": "10:00-13:00 수학 (둔산동) /      4:30-7:30 국어 (둔산동)", "일": "", "blocks": {"월": [[1140, 1320, "일정", "other"]], "화": [], "수": [[1170, 1350, "일정", "other"]], "목": [], "금": [[1050, 1140, "영어(진학)", "eng_jinhak"], [1140, 1230, "영어(진학)", "eng_jinhak"]], "토": [[600, 780, "일정", "other"], [990, 1170, "일정", "other"]], "일": []}, "has_jinhak": true}, {"name": "김민제", "school": "대신고", "date": "2026-03-04", "월": "학교야자(9시반) 운동 10-11시", "화": "학교야자(9시반) 수학(월평동) 10-12시", "수": "학교(4시 20분) 운동 7시반-9시반", "목": "학교야자(9시반) 수학(월평동) 10-12시", "금": "학교야자(9시반) 운동 7시 반-9시반", "토": "", "일": "", "blocks": {"월": [[480, 570, "학교", "school"]], "화": [[480, 570, "학교", "school"]], "수": [[480, 980, "학교", "school"]], "목": [[480, 570, "학교", "school"]], "금": [[480, 570, "학교", "school"]], "토": [], "일": []}}, {"name": "김예지", "school": "둔원고", "date": "2026-03-04", "월": "학교(3시), 국어학원(둔산동) 5시-8시", "화": "학교 오후자습(6시), 영어학원(양영) 8시 30분-10시", "수": "학교야자(9시), 없음", "목": "학교 오후자습(6시), 수학학원(둔산동) 7시 30분-10시 30분", "금": "학교(3시), 내신버디", "토": "과학학원(둔산동) 1시-4시, 영어학원(양영) 4시-7시", "일": "영어학원(양영) 3시 15분-5시 25분, 수학학원(둔산동) 8시-11시", "blocks": {"월": [[480, 900, "학교", "school"], [1020, 1200, "국어학원", "korean"]], "화": [[480, 1080, "학교", "school"], [1230, 1320, "영어학원", "english"], [1230, 1320, "⚠ 영어(진학)", "eng_conflict"]], "수": [[480, 540, "학교", "school"]], "목": [[480, 1080, "학교", "school"], [1170, 1350, "수학학원", "math"]], "금": [[480, 900, "학교", "school"]], "토": [[780, 960, "과학학원", "science"], [960, 1140, "영어학원", "english"]], "일": [[915, 1045, "영어학원", "english"], [1200, 1380, "수학학원", "math"]]}, "conflict": true, "has_jinhak": true}, {"name": "김주성", "school": "충남고", "date": "2026-03-04", "월": "5시~7시30분(국어)", "화": "7시~11시30분(수학)", "수": "야자 4시30분~10시(뺄 수 있음)", "목": "7시 30분(수학)", "금": "X", "토": "2시~8시30분(수학)", "일": "7시30분(수학)", "blocks": {"월": [[1020, 1170, "일정", "other"], [1230, 1320, "영어(진학)", "eng_jinhak"]], "화": [[1140, 1410, "일정", "other"]], "수": [[990, 1320, "야자", "school"]], "목": [], "금": [], "토": [[840, 1230, "일정", "other"]], "일": []}, "has_jinhak": true}, {"name": "김효인", "school": "원신흥중", "date": "2026-03-04", "월": "학교(3시)", "화": "학교(4시)", "수": "학교(3시)", "목": "학교(4시)", "금": "학교(3시)", "토": "", "일": "", "blocks": {"월": [[480, 900, "학교", "school"]], "화": [[480, 960, "학교", "school"]], "수": [[480, 900, "학교", "school"]], "목": [[480, 960, "학교", "school"]], "금": [[480, 900, "학교", "school"]], "토": [], "일": []}}, {"name": "박나희", "school": "전민고", "date": "2026-03-04", "월": "학교 (6시), 운동(전민동) 7-8시", "화": "학교(9시), 국어학원(전민동) 9-10시30분", "수": "학교야자(6시), 수학과외 7-9시", "목": "학교(9시)", "금": "학교야자(6시), 운동(전민동) 7-10시", "토": "영어", "일": "국어학원 9-10시30분, 교회 11-12시30분, 영어 1시40분-3시45분, 수학과외 6-8시", "blocks": {"월": [[480, 1080, "학교", "school"]], "화": [[480, 540, "학교", "school"]], "수": [[480, 1080, "학교", "school"]], "목": [[480, 540, "학교", "school"]], "금": [[480, 1080, "학교", "school"]], "토": [], "일": [[820, 945, "영어", "english"]]}}, {"name": "박시우", "school": "지족고", "date": "2026-03-04", "월": "학교 4시, 수학학원(집근처) 5시 30분-7시", "화": "학교 4시", "수": "학교 3시 30분, 수학학원(집근처) 5시 30분-7시", "목": "학교 4시", "금": "학교 3시 30분, 국어학원(둔산) 7시", "토": "없음", "일": "없음", "blocks": {"월": [[480, 960, "학교", "school"], [1050, 1140, "수학학원", "math"]], "화": [[480, 960, "학교", "school"], [1140, 1230, "영어(진학)", "eng_jinhak"]], "수": [[480, 960, "학교", "school"], [1050, 1140, "수학학원", "math"]], "목": [[480, 960, "학교", "school"]], "금": [[480, 960, "학교", "school"]], "토": [], "일": []}, "has_jinhak": true}, {"name": "박지민", "school": "대성고", "date": "2026-03-04", "월": "학교(2:00), 수학 (둔산동) (8시~11시)", "화": "학교 (3:10)", "수": "학교 (2:00), 영어 (8:30-10:00)", "목": "학교 (3:10), 국어 (둔산동)(5:30-8:30)", "금": "학교 (2:00)", "토": "수학(9:30-12:30), 영어(2:15-7:00)", "일": "영어(2:15-5:25), 수학(8:00-11:00) / 선생님, 원래 제 영어 일요일 시간표가 A반이었는데 혹시 B반으로 바꿀 수 있나요?", "blocks": {"월": [[480, 960, "학교", "school"], [1200, 1380, "수학 (둔산동) (", "math"]], "화": [[480, 960, "학교", "school"]], "수": [[480, 960, "학교", "school"], [1230, 1320, "영어 (", "english"]], "목": [[480, 960, "학교", "school"], [1050, 1230, "국어 (둔산동)(", "korean"], [1140, 1230, "⚠ 영어(진학)", "eng_conflict"]], "금": [[480, 960, "학교", "school"], [1230, 1320, "영어(진학)", "eng_jinhak"]], "토": [[570, 750, "수학(", "math"], [855, 1140, "영어(", "english"]], "일": [[855, 1045, "영어(", "english"], [1200, 1380, "수학(", "math"]]}, "conflict": true, "has_jinhak": true}, {"name": "방나현", "school": "", "date": "2026-03-04", "월": "학교(4시) / 없음", "화": "학교(4시) / 수학학원8-11", "수": "학교오후자습(6시) / 국어학원7:30-10:30", "목": "학교오후자습(6시)", "금": "학교(3시) / 없음", "토": "수학학원2-5", "일": "없음", "blocks": {"월": [[480, 960, "학교", "school"]], "화": [[480, 960, "학교", "school"]], "수": [[480, 1080, "학교", "school"], [1170, 1350, "국어학원", "korean"]], "목": [[480, 1080, "학교", "school"]], "금": [[480, 900, "학교", "school"]], "토": [], "일": []}}, {"name": "백대희", "school": "대전고", "date": "2026-03-04", "월": "학교 (5시40) 수학(탄방동) 9~12시", "화": "학교 (5시40) 수학(탄방동) 10~12시", "수": "학교 (4시) 없음", "목": "학교 (5시40)수학(탄방) 10~12시", "금": "학교 (5시40) 사탐(탄방) 7시~9시", "토": "국어(탄방) 1~4시", "일": "없음", "blocks": {"월": [[480, 960, "학교", "school"]], "화": [[480, 960, "학교", "school"]], "수": [[480, 960, "학교", "school"]], "목": [[480, 960, "학교", "school"]], "금": [[480, 960, "학교", "school"]], "토": [], "일": []}}, {"name": "서현진", "school": "대성고", "date": "2026-03-04", "월": "학교 오자(5시 40분)", "화": "학교(4시), 영어(토피아 고등) 7시-8시 반", "수": "학교 오자 (5시 40분)", "목": "학교 오자 (5시 40분)", "금": "학교(4시), 내신버디(토피아 고등관) 5시반-7시, 수학(양영) 7-10시(3/20 부터 7시-11시 반)", "토": "영어(토피아 고등관) 12시 10분-3시 45분, (3/21 국어 6-9시)", "일": "국어(둔산동) 9-12시, 영어(토피아 고등관) 1시 40분-3시 45분, 수학(양영) 5시 25분-8시 30분", "blocks": {"월": [[480, 1060, "학교", "school"]], "화": [[480, 960, "학교", "school"], [1140, 1200, "영어", "english"]], "수": [[480, 1060, "학교", "school"]], "목": [[480, 1060, "학교", "school"], [1140, 1230, "영어(진학)", "eng_jinhak"]], "금": [[480, 960, "학교", "school"], [1050, 1140, "내신버디", "other"], [1140, 1380, "20 부터", "other"], [1230, 1320, "⚠ 영어(진학)", "eng_conflict"]], "토": [[730, 945, "영어", "english"]], "일": [[820, 945, "영어", "english"], [1045, 1230, "수학", "math"]]}, "has_jinhak": true, "conflict": true}, {"name": "신동휘", "school": "", "date": "2026-03-02", "월": "학교 (5시)", "화": "수학학원(신성동) 4:30~7:00", "수": "학교(5시)", "목": "수학학원(신성동)4:30~7:00", "금": "국어학원(신성동)6:00~7:30", "토": "없음", "일": "수학학원9:30~12:00", "blocks": {"월": [[480, 1020, "학교", "school"]], "화": [[990, 1140, "수학학원", "math"]], "수": [[480, 1020, "학교", "school"]], "목": [[990, 1140, "수학학원", "math"]], "금": [[1080, 1170, "국어학원", "korean"]], "토": [], "일": [[570, 720, "수학학원", "math"]]}}, {"name": "연두", "school": "대전외고", "date": "2026-03-01", "월": "", "화": "", "수": "학교 (9시)", "목": "학교 (9시), 중국어 (10-11시)", "금": "학교 (4시), 수학(양영)", "토": "토피아", "일": "국어(둔산/9-12시), 토피아, 양영", "blocks": {"월": [], "화": [], "수": [[480, 540, "학교", "school"]], "목": [[480, 540, "학교", "school"]], "금": [[480, 960, "학교", "school"], [1050, 1140, "영어(진학)", "eng_jinhak"], [1140, 1230, "영어(진학)", "eng_jinhak"]], "토": [], "일": []}, "has_jinhak": true}, {"name": "이가영", "school": "외고", "date": "2026-03-01", "월": "학교야자(9시)", "화": "학교야자(9시)", "수": "학교야자(9시)", "목": "학교야자(9시)", "금": "학교(4시), 영어, 수학(7-10시)", "토": "영어, 국어(5:25-8:30)", "일": "영어, 수학(7-10시)", "blocks": {"월": [[480, 540, "학교", "school"]], "화": [[480, 540, "학교", "school"]], "수": [[480, 540, "학교", "school"]], "목": [[480, 540, "학교", "school"]], "금": [[480, 960, "학교", "school"], [1050, 1140, "영어(진학)", "eng_jinhak"], [1140, 1230, "영어(진학)", "eng_jinhak"]], "토": [[1045, 1230, "국어(", "korean"]], "일": []}, "has_jinhak": true}, {"name": "이승연", "school": "", "date": "2026-03-04", "월": "", "화": "", "수": "", "목": "", "금": "학교(6시), 에듀플렉스(집 근처, 11시 반) / 주말: X", "토": "", "일": "", "blocks": {"월": [], "화": [], "수": [], "목": [], "금": [[480, 1080, "학교", "school"]], "토": [], "일": []}}, {"name": "이연수", "school": "충남고", "date": "2026-03-04", "월": "학교 (4시), 진학학원 영어 내신대비반 8:30-10시", "화": "학교 (3시)", "수": "학교 (4시), 수학학원(둔산동) 7-11:30", "목": "학교 (4시)", "금": "학교 (1시: 임시시간표라서 변동 예정), 국어학원(둔산동) 5:30-8:30", "토": "진학학원 12:10-3:45, 과학학원(둔산동) 5:30-8:30", "일": "수학학원(둔산동) 12:40-3:45, 진학학원 3:45-5:25(PRE 시간 상담 필요)", "blocks": {"월": [[480, 960, "학교", "school"], [1230, 1320, "진학학원 영어 내신대비반", "english"], [1230, 1320, "⚠ 영어(진학)", "eng_conflict"]], "화": [[480, 900, "학교", "school"]], "수": [[480, 960, "학교", "school"]], "목": [[480, 960, "학교", "school"]], "금": [[480, 960, "학교", "school"], [1050, 1230, "국어학원", "korean"]], "토": [[730, 945, "진학학원", "other"], [1050, 1230, "과학학원", "science"]], "일": [[760, 945, "수학학원", "math"], [945, 1045, "진학학원", "other"]]}, "conflict": true, "has_jinhak": true}, {"name": "이연재", "school": "대성고", "date": "2026-03-04", "월": "학교(6시30분)", "화": "학교(6시30분), 국어학원(4시 30분-7시30분)", "수": "학교(6시30분), 수학학원(7시-11시30분)", "목": "학교(6시30분)", "금": "학교(6시30분)", "토": "", "일": "", "blocks": {"월": [[480, 1110, "학교", "school"]], "화": [[480, 1110, "학교", "school"], [990, 1170, "국어학원(", "korean"]], "수": [[480, 1110, "학교", "school"], [1140, 1410, "수학학원(", "math"]], "목": [[480, 1110, "학교", "school"], [1140, 1230, "영어(진학)", "eng_jinhak"]], "금": [[480, 1110, "학교", "school"], [1230, 1320, "영어(진학)", "eng_jinhak"]], "토": [], "일": []}, "has_jinhak": true}, {"name": "이은서", "school": "", "date": "2026-03-05", "월": "학교오자 (7시)", "화": "학교오자 (7시) 국어학원(둔산동) 8:00-11:00", "수": "학교야자(9시)", "목": "학교오자 (7시) 수학학원(둔산동) 7:30-11:00", "금": "학교(3시)", "토": "수학학원(둔산동) 5:00-9:00", "일": "과학학원(둔산동) 10:30-1:00", "blocks": {"월": [[480, 1140, "학교", "school"]], "화": [[480, 1140, "학교", "school"]], "수": [[480, 540, "학교", "school"]], "목": [[480, 1140, "학교", "school"]], "금": [[480, 900, "학교", "school"]], "토": [[1020, 1260, "수학학원", "math"]], "일": [[630, 780, "과학학원", "science"]]}}, {"name": "정승원", "school": "대성고", "date": "2026-03-04", "월": "학교 4시, 수학학원 7-8시 30(집근처)", "화": "학교 4시 학원X", "수": "학교 3시 수학학원 7-8시 30(집근처)", "목": "학교 4시 학원X", "금": "학교 3시 수학학원 7-8시 30(집근처)", "토": "국어학원 12시 30-2시(집근처)", "일": "국어학원 5시-6시 30(집근처)", "blocks": {"월": [[480, 960, "학교", "school"]], "화": [[480, 960, "학교", "school"]], "수": [[480, 960, "학교", "school"]], "목": [[480, 960, "학교", "school"], [1140, 1230, "영어(진학)", "eng_jinhak"]], "금": [[480, 960, "학교", "school"], [1230, 1320, "영어(진학)", "eng_jinhak"]], "토": [[750, 840, "국어학원", "korean"]], "일": [[1020, 1110, "국어학원", "korean"]]}, "has_jinhak": true}, {"name": "정유진", "school": "", "date": "2026-03-04", "월": "학교 3시, 수학학원(집근처) 8시 반~11시", "화": "학교오후자습 6~7시", "수": "학교 3시, 수학학원(집근처) 8시 반~11시", "목": "학교오후자습 6~7시", "금": "학교 3시", "토": "없음", "일": "수학학원 4시 반~6시", "blocks": {"월": [[480, 960, "학교", "school"]], "화": [[480, 960, "학교", "school"]], "수": [[480, 960, "학교", "school"]], "목": [[480, 960, "학교", "school"]], "금": [[480, 960, "학교", "school"]], "토": [], "일": []}}, {"name": "한채영", "school": "", "date": "2026-03-04", "월": "학교 오후 자습(7시)", "화": "학교야자 (9시)", "수": "학교 (4시), 수학학원(양영) 7~11시 30분", "목": "학교야자 (9시)", "금": "학교야자 (9시)", "토": "없음", "일": "수학학원(양영) 12시 40분~3시45분", "blocks": {"월": [[480, 1140, "학교", "school"]], "화": [[480, 540, "학교", "school"]], "수": [[480, 960, "학교", "school"]], "목": [[480, 540, "학교", "school"]], "금": [[480, 540, "학교", "school"]], "토": [], "일": [[760, 945, "수학학원", "math"]]}}, {"name": "황서휘", "school": "도안고", "date": "2026-03-04", "월": "학교 야자(9시)", "화": "학교 야자(9시)", "수": "학교 오자(6시)", "목": "학교 야자(9시)", "금": "학교(3시)", "토": "영어 학원(양영)", "일": "영어 학원(양영), 국어 학원(둔산)- 4:00-6:30", "blocks": {"월": [[480, 540, "학교", "school"], [1230, 1320, "영어(진학)", "eng_jinhak"]], "화": [[480, 540, "학교", "school"]], "수": [[480, 1080, "학교", "school"], [1140, 1230, "영어(진학)", "eng_jinhak"]], "목": [[480, 540, "학교", "school"]], "금": [[480, 900, "학교", "school"]], "토": [], "일": [[960, 1110, "국어 학원(둔산)-", "korean"]]}, "has_jinhak": true}], "missing": ["강래원", "강현우", "길영찬", "김나연", "김민준", "김민찬", "김세진", "김소율", "김수아", "김승찬", "김시율", "김용우", "김주원", "문영준", "박서정", "박우정", "박채원", "성민준", "송인창", "신예서", "안예주", "양희선", "오은서", "윤지우", "이도현", "이동재", "이서율", "이시영", "이시은", "이아윤", "이윤정", "이준원", "임준희", "임지섭", "장윤영", "전유안", "정태연", "정하율", "조우진", "조현서", "지선우", "최상훈", "최성민", "최용훈", "최지오", "최진묵", "최현준", "피민준", "현민광"]};
+const DATA = loadData() || JSON.parse(JSON.stringify(RAW_DEFAULT));
+const DAYS_WD=['월','화','수','목','금'],DAYS_WE=['토','일'],ALL_DAYS=[...DAYS_WD,...DAYS_WE];
+const WD_START=540,WD_END=1380,WE_START=540,WE_END=1380,PPM=0.42;
+const ACOLORS={강:'#1d4ed8',김:'#0f766e',이:'#7c3aed',박:'#be123c',최:'#d97706',정:'#059669',황:'#9333ea',서:'#0369a1',신:'#b45309',백:'#16a34a',방:'#0891b2',연:'#475569',한:'#c2410c',조:'#1d4ed8',지:'#6d28d9'};
+const acolor=n=>ACOLORS[n[0]]||'#374151';
+function hl(t,q){if(!q||!t)return t||'';return t.replace(new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi'),'<mark>$1</mark>')}
+function px(m,we){return(m-(we?WE_START:WD_START))*PPM}
+function totalH(we){return((we?WE_END:WD_END)-(we?WE_START:WD_START))*PPM}
+function fmtTime(m){const h=Math.floor(m/60),mm=m%60;return h+':'+(mm<10?'0':'')+mm}
+
+function buildAxis(we){
+  const s=we?WE_START:WD_START,e=we?WE_END:WD_END,h=totalH(we);
+  let html='';
+  for(let m=s;m<=e;m+=60){
+    const top=(m-s)*PPM,hour=Math.floor(m/60);
+    html+=`<div class="tt-axis-tick" style="top:${top}px">${hour}</div>`;
+  }
+  return {html,height:h};
+}
+function buildGuides(we){
+  const s=we?WE_START:WD_START,e=we?WE_END:WD_END;
+  let h='';
+  for(let m=s;m<=e;m+=30){
+    const top=(m-s)*PPM,cls=m%60===0?'hline hr':'hline';
+    h+=`<div class="${cls}" style="top:${top}px"></div>`;
+  }
+  return h;
+}
+function buildBlock(blk,we){
+  const[st,et,label,cat]=blk,base=we?WE_START:WD_START,end=we?WE_END:WD_END;
+  const cst=Math.max(st,base),cet=Math.min(et,end);
+  if(cst>=cet)return'';
+  const top=(cst-base)*PPM,height=Math.max(8,(cet-cst)*PPM);
+  const tip=`${label}  ${fmtTime(st)}–${fmtTime(et)}`;
+  return `<div class="ev-block ${cat}" style="top:${top}px;height:${height}px" data-tip="${tip}"><span class="ev-label">${label}</span></div>`;
+}
+function buildCard(s,idx){
+  const col=acolor(s.name),Q_=document.getElementById('q').value.trim();
+  const wdH=totalH(false),weH=totalH(true);
+  const guideWD=buildGuides(false),guideWE=buildGuides(true);
+  const axWD=buildAxis(false),axWE=buildAxis(true);
+
+  const wdCols=DAYS_WD.map(d=>{
+    const blks=s.blocks[d]||[];
+    const evH=blks.map(b=>buildBlock(b,false)).join('');
+    return `<div class="day-col" data-d="${d}"><div class="dhead">${d}</div><div class="dcol-body" style="height:${wdH}px">${guideWD}${blks.length?evH:'<div class="day-empty">—</div>'}</div></div>`;
+  }).join('');
+  const weCols=DAYS_WE.map(d=>{
+    const blks=s.blocks[d]||[];
+    const evH=blks.map(b=>buildBlock(b,true)).join('');
+    return `<div class="day-col" data-d="${d}"><div class="dhead">${d}</div><div class="dcol-body" style="height:${weH}px">${guideWE}${blks.length?evH:'<div class="day-empty">—</div>'}</div></div>`;
+  }).join('');
+
+  return `<div class="scard ${s.conflict?'conflict-card':''}" style="animation-delay:${idx*.02}s">
+    <div class="chead">
+      <div class="avatar" style="background:${col}">${s.name[0]}</div>
+      <div class="cname">${hl(s.name,Q_)}</div>
+      ${s.school?`<div class="cschool">${hl(s.school,Q_)}</div>`:''}
+      <div class="cdate">${s.date}</div>
+    </div>
+    <div class="tt-body">
+      <div class="tt-section" style="flex:5">
+        <div class="tt-section-label">평일 (9–23시)</div>
+        <div class="tt-row">
+          <div class="tt-axis" style="height:${wdH}px">${axWD.html}</div>
+          <div class="tt-cols">${wdCols}</div>
+        </div>
+      </div>
+      <div class="tt-section" style="flex:2">
+        <div class="tt-section-label">주말 (9–23시)</div>
+        <div class="tt-row">
+          <div class="tt-axis" style="height:${weH}px">${axWE.html}</div>
+          <div class="tt-cols">${weCols}</div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+let view='card',activeDay=null,Q='';
+function getList(){
+  const q=Q.toLowerCase();
+  return DATA.submitted.filter(s=>{
+    const nm=s.name.includes(q),sc=(s.school||'').toLowerCase().includes(q);
+    const ct=ALL_DAYS.map(d=>s[d]||'').join(' ').toLowerCase().includes(q);
+    const df=!activeDay||((s.blocks[activeDay]||[]).length>0);
+    const cf=view!=='conflict'||s.conflict;
+    return(nm||sc||ct)&&df&&cf;
+  });
+}
+function render(){
+  const isCard=view==='card'||view==='conflict';
+  document.getElementById('view-card').style.display=isCard?'':'none';
+  document.getElementById('view-table').style.display=view==='table'?'':'none';
+  document.getElementById('view-miss').style.display=view==='miss'?'':'none';
+  document.getElementById('legend').style.display=isCard?'':'none';
+  document.getElementById('dchips').style.visibility=view==='miss'?'hidden':'';
+  if(view==='card'||view==='conflict'){
+    const list=getList();
+    document.getElementById('rcnt').textContent=list.length+'명';
+    document.getElementById('n-ok').textContent=list.length;
+    document.getElementById('cgrid').innerHTML=list.length?list.map((s,i)=>buildCard(s,i)).join(''):'<div class="empty">검색 결과 없음</div>';
+    bindTips();
+  }else if(view==='table'){
+    const list=getList();
+    document.getElementById('rcnt').textContent=list.length+'명';
+    document.getElementById('n-ok').textContent=list.length;
+    const days=activeDay?[activeDay]:ALL_DAYS;
+    const hd=`<thead><tr><th>학생</th><th>학교</th>${days.map(d=>`<th data-d="${d}">${d}요일</th>`).join('')}</tr></thead>`;
+    const bd=`<tbody>${list.map(s=>`<tr><td>${hl(s.name,Q)}</td><td style="color:var(--ink3);font-size:12px">${hl(s.school||'—',Q)}</td>${days.map(d=>{const v=s[d]||'';const e=!v||v==='없음'||v==='X';return`<td class="${e?'td-e':''}">${e?'—':hl(v,Q)}</td>`}).join('')}</tr>`).join('')}</tbody>`;
+    document.getElementById('tbl').innerHTML=hd+bd;
+  }else{
+    const q=Q.toLowerCase(),list=DATA.missing.filter(n=>n.includes(q));
+    document.getElementById('rcnt').textContent=list.length+'명';
+    document.getElementById('mcnt').textContent=list.length;
+    document.getElementById('mgrid').innerHTML=list.map((n,i)=>`<div class="miss-chip" style="animation-delay:${i*.02}s">${hl(n,Q)}</div>`).join('');
+  }
+}
+const tip=document.getElementById('tip');
+function bindTips(){
+  document.querySelectorAll('.ev-block').forEach(el=>{
+    el.onmouseenter=()=>{tip.textContent=el.dataset.tip;tip.style.display='block'};
+    el.onmousemove=e=>{tip.style.left=(e.clientX+12)+'px';tip.style.top=(e.clientY-28)+'px'};
+    el.onmouseleave=()=>{tip.style.display='none'};
+  });
+}
+function setView(v){view=v;document.querySelectorAll('.vtab').forEach((b,i)=>b.classList.toggle('on',['card','table','conflict','miss'][i]===v));render()}
+function toggleDay(d){activeDay=activeDay===d?null:d;document.querySelectorAll('.dchip').forEach(c=>c.classList.toggle('on',c.dataset.d===activeDay));render()}
+document.getElementById('q').addEventListener('input',e=>{Q=e.target.value.trim();render()});
+
+// ── 입력 탭 전환 ──
+function switchInputTab(tab){
+  document.querySelectorAll('.itab').forEach((b,i)=>b.classList.toggle('on',['text','csv'][i]===tab));
+  document.getElementById('tab-text').style.display=tab==='text'?'':'none';
+  document.getElementById('tab-csv').style.display=tab==='csv'?'':'none';
+}
+
+// ── 텍스트 시간표 적용 ──
+function applyTextInput(){
+  const name=document.getElementById('txtName').value.trim();
+  const school=document.getElementById('txtSchool').value.trim();
+  const raw=document.getElementById('txtSchedule').value.trim();
+  const res=document.getElementById('applyResult')||(()=>{
+    const d=document.createElement('div');d.id='applyResult';d.className='apply-result';
+    document.querySelector('.text-actions').after(d);return d;
+  })();
+  if(!name){res.className='apply-result err';res.style.display='';res.textContent='⚠ 학생 이름을 입력해주세요.';return;}
+  if(!raw){res.className='apply-result err';res.style.display='';res.textContent='⚠ 시간표 내용을 붙여넣어주세요.';return;}
+
+  const DAYS=['월','화','수','목','금','토','일'];
+  const dayTexts={};
+  // 줄 단위로 파싱: "요일: 내용"
+  const lines=raw.split(/\n/);
+  let curDay=null;
+  for(const line of lines){
+    const m=line.match(/^([월화수목금토일])\s*[:：]\s*(.*)/);
+    if(m){curDay=m[1];dayTexts[curDay]=(m[2]||'').trim();}
+    else if(curDay&&line.trim()){dayTexts[curDay]+=' '+line.trim();}
+  }
+  if(!Object.keys(dayTexts).length){
+    res.className='apply-result err';res.style.display='';
+    res.textContent='⚠ 형식 오류: "월: 내용" 형식으로 입력되지 않았습니다. Claude 변환 프롬프트를 사용해주세요.';return;
+  }
+  const blocks={};
+  DAYS.forEach(d=>{blocks[d]=parseBlocks(dayTexts[d]||'');});
+  const today=new Date().toISOString().slice(0,10);
+  let student={name,school,date:today,blocks};
+  DAYS.forEach(d=>{student[d]=dayTexts[d]||'';});
+  student=applyJinhak(student);
+  mergeStudent(DATA,student);
+  saveData(DATA);
+  updateBadges();
+  render();
+  // 결과 표시
+  const isNew=!DATA.submitted.some(s=>s.name===name)||true;
+  res.className='apply-result ok';res.style.display='';
+  res.textContent=`✅ ${name} 시간표 ${isNew?'추가':'업데이트'} 완료`;
+  document.getElementById('txtName').value='';
+  document.getElementById('txtSchool').value='';
+  document.getElementById('txtSchedule').value='';
+}
+
+// ── 배지 업데이트 ──
+function updateBadges(){
+  document.getElementById('n-ok').textContent=DATA.submitted.length;
+  document.getElementById('n-mis').textContent=DATA.missing.length;
+}
+
+// ── Claude 프롬프트 모달 ──
+function showPrompt(){document.getElementById('promptOverlay').style.display='flex'}
+function closePrompt(){document.getElementById('promptOverlay').style.display='none'}
+function copyPrompt(){
+  navigator.clipboard.writeText(document.getElementById('promptBox').textContent)
+    .then(()=>{
+      const btn=document.querySelector('.copy-prompt-btn');
+      btn.textContent='✅ 복사됨!';setTimeout(()=>{btn.textContent='📋 프롬프트 복사';},2000);
+    });
+}
+document.getElementById('promptOverlay').style.display='none';
+
+render();
+</script>
+</body>
+</html>
