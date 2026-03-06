@@ -1185,6 +1185,7 @@ function fillMissing(name, school, grade){
     document.getElementById('txtName').value = name;
     document.getElementById('txtSchool').value = school || '';
     if(grade) document.getElementById('txtGrade').value = String(grade);
+    onNameInput(name); // 자동감지 트리거
     document.getElementById('txtSchedule').focus();
   }, 150);
 }
