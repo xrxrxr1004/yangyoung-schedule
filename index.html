@@ -648,18 +648,25 @@ function buildBlock(blk,we){
 }
 function buildCard(s,idx){
   const col=acolor(s.name),Q_=document.getElementById('q').value.trim();
-  // 요일 선택 시: 해당 요일 하나만 전체 너비로 표시
-  if(activeDay){
-    const isWE=DAYS_WE.includes(activeDay);
-    const h=totalH(isWE);
-    const guide=buildGuides(isWE);
-    const ax=buildAxis(isWE);
-    const blks=s.blocks[activeDay]||[];
-    const evH=blks.map(b=>buildBlock(b,isWE)).join('');
-    const dayCol=`<div class="day-col day-col-focus" data-d="${activeDay}">
-      <div class="dhead dhead-${activeDay}">${activeDay}요일</div>
-      <div class="dcol-body" style="height:${h}px">${guide}${blks.length?evH:'<div class="day-empty">일정 없음</div>'}</div>
-    </div>`;
+  // 요일 선택 시: 선택된 요일들만 나란히 표시
+  if(activeDays.size>0){
+    // 선택된 요일 순서 유지 (월화수목금토일 순)
+    const selDays=ALL_DAYS.filter(d=>activeDays.has(d));
+    const hasWD=selDays.some(d=>DAYS_WD.includes(d));
+    const hasWE=selDays.some(d=>DAYS_WE.includes(d));
+    // 높이는 가장 큰 섹션 기준 통일
+    const h=totalH(true); // 9-23시 기준
+    const guide=buildGuides(true);
+    const ax=buildAxis(true);
+    const dayCols=selDays.map(d=>{
+      const isWE=DAYS_WE.includes(d);
+      const blks=s.blocks[d]||[];
+      const evH=blks.map(b=>buildBlock(b,isWE)).join('');
+      return `<div class="day-col day-col-focus" data-d="${d}">
+        <div class="dhead">${d}요일</div>
+        <div class="dcol-body" style="height:${h}px">${guide}${blks.length?evH:'<div class="day-empty">—</div>'}</div>
+      </div>`;
+    }).join('');
     return `<div class="scard scard-focus ${s.conflict?'conflict-card':''}" style="animation-delay:${idx*.02}s">
       <div class="chead chead-sm">
         <div class="avatar" style="background:${col}">${s.name[0]}</div>
@@ -670,7 +677,7 @@ function buildCard(s,idx){
         <div class="tt-section" style="flex:1">
           <div class="tt-row">
             <div class="tt-axis" style="height:${h}px">${ax.html}</div>
-            <div class="tt-cols">${dayCol}</div>
+            <div class="tt-cols">${dayCols}</div>
           </div>
         </div>
       </div>
@@ -716,7 +723,7 @@ function buildCard(s,idx){
   </div>`;
 }
 
-let view='card', activeDay=null, Q='', selectedNames=new Set();
+let view='card', activeDays=new Set(), Q='', selectedNames=new Set();
 
 function getList(){
   const q=Q.toLowerCase();
@@ -725,10 +732,9 @@ function getList(){
     const sc=(s.school||'').toLowerCase().includes(q);
     const ct=ALL_DAYS.map(d=>s[d]||'').join(' ').toLowerCase().includes(q);
     const textMatch=(nm||sc||ct);
-    // 다중 이름 필터: 선택된 이름이 있으면 그 중 하나여야 함
     const nameMatch=selectedNames.size===0||selectedNames.has(s.name);
-    // 요일 필터: 해당 요일에 블록이 있어야 함
-    const dayMatch=!activeDay||(s.blocks[activeDay]||[]).length>0;
+    // 요일 필터: 선택된 요일 중 하나라도 블록이 있으면 표시
+    const dayMatch=activeDays.size===0||[...activeDays].some(d=>(s.blocks[d]||[]).length>0);
     const conflictMatch=view!=='conflict'||s.conflict;
     return textMatch&&nameMatch&&dayMatch&&conflictMatch;
   });
@@ -743,7 +749,6 @@ function renderNameFilter(){
       ${s.name}${s.school?`<span class="nchip-school">${s.school}</span>`:''}
     </button>`;
   }).join('');
-  // 초기화 버튼
   document.getElementById('name-filter-clear').style.display=selectedNames.size>0?'':'none';
 }
 function toggleName(name){
@@ -766,13 +771,13 @@ function render(){
     const list=getList();
     document.getElementById('rcnt').textContent=list.length+'명';
     const grid=document.getElementById('cgrid');
-    grid.classList.toggle('focus-grid',!!activeDay);
+    grid.classList.toggle('focus-grid',activeDays.size>0);
     grid.innerHTML=list.length?list.map((s,i)=>buildCard(s,i)).join(''):'<div class="empty">검색 결과 없음</div>';
     bindTips();
   }else if(view==='table'){
     const list=getList();
     document.getElementById('rcnt').textContent=list.length+'명';
-    const days=activeDay?[activeDay]:ALL_DAYS;
+    const days=activeDays.size>0?ALL_DAYS.filter(d=>activeDays.has(d)):ALL_DAYS;
     const hd=`<thead><tr><th>학생</th><th>학교</th>${days.map(d=>`<th>${d}요일</th>`).join('')}</tr></thead>`;
     const bd=`<tbody>${list.map(s=>`<tr><td>${hl(s.name,Q)}</td><td style="color:var(--ink3);font-size:12px">${hl(s.school||'—',Q)}</td>${days.map(d=>{const v=s[d]||'';const e=!v||v==='없음'||v==='X';return`<td class="${e?'td-e':''}">${e?'—':hl(v,Q)}</td>`}).join('')}</tr>`).join('')}</tbody>`;
     document.getElementById('tbl').innerHTML=hd+bd;
@@ -793,8 +798,9 @@ function bindTips(){
 }
 function setView(v){view=v;document.querySelectorAll('.vtab').forEach((b,i)=>b.classList.toggle('on',['card','table','conflict','miss'][i]===v));render()}
 function toggleDay(d){
-  activeDay=activeDay===d?null:d;
-  document.querySelectorAll('.dchip').forEach(c=>c.classList.toggle('on',c.dataset.d===activeDay));
+  if(activeDays.has(d))activeDays.delete(d);
+  else activeDays.add(d);
+  document.querySelectorAll('.dchip').forEach(c=>c.classList.toggle('on',activeDays.has(c.dataset.d)));
   render();
 }
 document.getElementById('q').addEventListener('input',e=>{Q=e.target.value.trim();render()});
