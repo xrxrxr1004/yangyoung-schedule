@@ -831,16 +831,16 @@ const DATA = loadData() || JSON.parse(JSON.stringify(RAW_DEFAULT));
 // submitted 항목에 grade 없으면 students DB + admissionYear로 자동 채우기
 (function enrichGrades(){
   const sMap = {};
-  (DATA.students||[]).forEach(s => sMap[s.name] = s);
+  (DATA.students||[]).forEach(s => sMap[s.name.normalize('NFC')] = s);
   DATA.submitted.forEach(s => {
     if (!s.grade) {
-      const db = sMap[s.name];
+      const db = sMap[s.name.normalize('NFC')];
       const ay = db?.admissionYear || s.admissionYear;
       if (ay) s.grade = calcGradeClient(ay);
     }
     // school도 DB에서 보완
     if (!s.school) {
-      const db = sMap[s.name];
+      const db = sMap[s.name.normalize('NFC')];
       if (db?.school) s.school = db.school;
     }
   });
@@ -955,11 +955,11 @@ let view='card', activeDays=new Set(), Q='', selectedNames=new Set();
 let selectedSchools=new Set(), selectedGrades=new Set();
 
 function getList(){
-  const q=Q.toLowerCase();
+  const q=Q.normalize('NFC').toLowerCase();
   return DATA.submitted.filter(s=>{
-    const nm=s.name.toLowerCase().includes(q);
-    const sc=(s.school||'').toLowerCase().includes(q);
-    const ct=ALL_DAYS.map(d=>s[d]||'').join(' ').toLowerCase().includes(q);
+    const nm=s.name.normalize('NFC').toLowerCase().includes(q);
+    const sc=(s.school||'').normalize('NFC').toLowerCase().includes(q);
+    const ct=ALL_DAYS.map(d=>s[d]||'').join(' ').normalize('NFC').toLowerCase().includes(q);
     const textMatch=(nm||sc||ct);
     const nameMatch=selectedNames.size===0||selectedNames.has(s.name);
     const schoolMatch=selectedSchools.size===0||selectedSchools.has(s.school||'');
@@ -986,7 +986,7 @@ function renderNameFilter(){
     c.classList.toggle('on', selectedGrades.has(c.dataset.g));
   });
   // 이름 칩 렌더 - 가나다 정렬 + 검색어 필터
-  const qChip = Q.toLowerCase();
+  const qChip = Q.normalize('NFC').toLowerCase();
   let filtered=selectedSchools.size>0||selectedGrades.size>0
     ? DATA.submitted.filter(s=>{
         const sm=selectedSchools.size===0||selectedSchools.has(s.school||'');
@@ -997,7 +997,7 @@ function renderNameFilter(){
   // 검색어가 있으면 이름/학교 기준으로 칩도 필터
   if(qChip){
     filtered=filtered.filter(s=>
-      s.name.toLowerCase().includes(qChip)||(s.school||'').toLowerCase().includes(qChip)
+      s.name.normalize('NFC').toLowerCase().includes(qChip)||(s.school||'').normalize('NFC').toLowerCase().includes(qChip)
     );
   }
   filtered.sort((a,b)=>a.name.localeCompare(b.name,'ko'));
@@ -1129,7 +1129,8 @@ function switchInputTab(tab){
 // ── 덮어쓰기 UI 함수 ──
 function onNameInput(name) {
   const q = name.trim();
-  const existing = DATA.submitted.find(s => s.name === q || s.name.trim() === q);
+  const qNFC = q.normalize('NFC');
+  const existing = DATA.submitted.find(s => s.name.normalize('NFC') === qNFC || s.name.trim().normalize('NFC') === qNFC);
   const cb = document.getElementById('owCheck');
   if (existing) {
     // 기존 학생 → 학교/학년 자동 채우기
