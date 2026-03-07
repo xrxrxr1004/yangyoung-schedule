@@ -275,8 +275,24 @@ mark{background:#fef08a;border-radius:2px;padding:0 2px;color:inherit}
 /* ── AI 변환 플로우 (제거됨, 호환용 빈 선언) ── */
 
 /* ── 등록 레이아웃 (좌우 2열) ── */
-.reg-layout{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start}
-@media(max-width:700px){.reg-layout{grid-template-columns:1fr}}
+.reg-layout{display:flex;flex-direction:column;gap:10px}
+/* ── 프롬프트 토글 ── */
+.prompt-toggle-wrap{border:1.5px solid var(--line);border-radius:10px;overflow:hidden}
+.prompt-toggle-head{display:flex;align-items:center;justify-content:space-between;
+  padding:9px 14px;cursor:pointer;user-select:none;background:#f8fafc;transition:background .15s}
+.prompt-toggle-head:hover{background:#f1f5f9}
+.prompt-toggle-title{font-size:12px;font-weight:700;color:var(--ink2);display:flex;align-items:center;gap:7px}
+.prompt-toggle-badge{font-size:10px;font-weight:600;background:#e0f2fe;color:#0369a1;
+  padding:2px 8px;border-radius:100px}
+.prompt-toggle-arrow{font-size:10px;color:var(--ink3);transition:transform .2s}
+.prompt-toggle-arrow.open{transform:rotate(180deg)}
+.prompt-toggle-body{display:none;padding:12px 14px;border-top:1.5px solid var(--line);background:#f8fafc}
+.prompt-toggle-body.open{display:block}
+.prompt-toggle-copy{margin-top:10px;padding:7px 14px;background:#fff;border:1.5px solid var(--line);
+  border-radius:7px;font-size:12px;font-weight:700;color:var(--ink2);cursor:pointer;
+  font-family:inherit;transition:all .15s}
+.prompt-toggle-copy:hover{border-color:#3b82f6;color:#3b82f6;background:#eff6ff}
+.prompt-toggle-copy.copied{border-color:#16a34a;color:#16a34a;background:#f0fdf4}
 .reg-col{display:flex;flex-direction:column;gap:6px}
 .reg-col-head{margin-bottom:2px}
 .reg-col-label{font-size:11px;font-weight:700;color:var(--ink3);line-height:1.5}
@@ -399,12 +415,17 @@ mark{background:#fef08a;border-radius:2px;padding:0 2px;color:inherit}
   <div class="itab-body" id="tab-text">
     <div class="reg-layout">
 
-      <!-- 왼쪽: 프롬프트 예시 -->
-      <div class="reg-col reg-col-prompt">
-        <div class="reg-col-head">
-          <span class="reg-col-label">① Claude 프롬프트 복사 → 카톡 내용 붙여넣기 → 변환 결과 오른쪽에 등록</span>
+      <!-- 프롬프트 규칙 토글 -->
+      <div class="prompt-toggle-wrap">
+        <div class="prompt-toggle-head" onclick="togglePromptSection()">
+          <span class="prompt-toggle-title">
+            💬 Claude 프롬프트 규칙
+            <span class="prompt-toggle-badge">처음 사용 시 참고</span>
+          </span>
+          <span class="prompt-toggle-arrow" id="promptArrow">▼</span>
         </div>
-        <div class="prompt-preview" id="promptPreview">다음 학생의 시간표를 아래 형식으로 변환해줘. 다른 말 없이 변환 결과만 출력해.
+        <div class="prompt-toggle-body" id="promptBody">
+          <div class="prompt-preview" id="promptPreview" style="min-height:unset;max-height:240px;font-size:11px;background:#fff;border:1.5px solid var(--line);border-radius:8px;padding:12px 14px;white-space:pre-wrap;font-family:'DM Mono',monospace;line-height:1.75;color:var(--ink2);overflow-y:auto">다음 학생의 시간표를 아래 형식으로 변환해줘. 다른 말 없이 변환 결과만 출력해.
 
 【형식 규칙】
 - 각 줄은 반드시 "요일: 내용" 형식
@@ -431,18 +452,16 @@ mark{background:#fef08a;border-radius:2px;padding:0 2px;color:inherit}
 금: 수학과외(집근처) 9시 - 약 11시반
 토: 통합사회(대훈) 1-4시, 수학과외(집근처) 9-11시반
 일: 국어(대훈) 1-4시</div>
-        <button class="copy-prompt-inline-btn" onclick="copyPromptInline()">📋 프롬프트 복사</button>
+          <button class="prompt-toggle-copy" id="promptToggleCopyBtn" onclick="copyPromptInline()">📋 프롬프트 복사</button>
+        </div>
       </div>
 
-      <!-- 오른쪽: 학생 정보 + 변환 결과 등록 -->
+      <!-- 등록 영역 -->
       <div class="reg-col reg-col-reg">
-        <div class="reg-col-head">
-          <span class="reg-col-label">② 변환 결과 붙여넣고 등록</span>
-        </div>
         <div class="text-input-row" style="margin-bottom:8px">
           <div class="text-input-col">
             <label class="input-label">학생 이름 *</label>
-            <input type="text" id="txtName" placeholder="예: 정하율" class="name-input" oninput="onNameInput(this.value)">
+            <input type="text" id="txtName" placeholder="이름 입력" class="name-input" oninput="onNameInput(this.value)">
           </div>
           <div class="text-input-col flex1">
             <label class="input-label">학교</label>
@@ -484,7 +503,7 @@ mark{background:#fef08a;border-radius:2px;padding:0 2px;color:inherit}
           <div class="ow-preview-days" id="owPreviewDays"></div>
         </div>
         <label class="input-label" style="display:block;margin-bottom:4px">변환된 시간표 붙여넣기 *</label>
-        <textarea id="txtSchedule" class="sched-textarea" style="height:148px" placeholder="월: 학교야자(9시)&#10;화: 학교야자(9시), 수학학원(둔산동) 7시30분-10시&#10;수: 학교야자(9시)&#10;목: 학교야자(9시)&#10;금: 학교(4시), 수학과외(집근처) 9시-11시30분&#10;토: 통합사회(대훈) 1시-4시&#10;일: 국어(대훈) 1시-4시"></textarea>
+        <textarea id="txtSchedule" class="sched-textarea" style="height:148px" placeholder="Claude 변환 결과를 여기에 붙여넣으세요&#10;예) 월: 학교야자(9시)&#10;화: 수학학원 7시-10시"></textarea>
         <div style="display:flex;justify-content:flex-end;margin-top:8px">
           <button class="apply-btn" id="applyBtn" onclick="applyTextInput()">등록 →</button>
         </div>
@@ -1074,13 +1093,27 @@ function toggleDay(d){
   document.querySelectorAll('.dchip').forEach(c=>c.classList.toggle('on',activeDays.has(c.dataset.d)));
   render();
 }
-document.getElementById('q').addEventListener('input',e=>{Q=e.target.value.trim();renderNameFilter();render()});
+document.getElementById('q').addEventListener('input',e=>{
+  Q=e.target.value.trim();
+  // 검색어 입력 시 miss 뷰면 card 뷰로 자동 전환 (submitted 학생도 검색되도록)
+  if(Q && view==='miss') setView('card');
+  renderNameFilter();
+  render();
+});
+
+// ── 프롬프트 토글 ──
+function togglePromptSection(){
+  const body = document.getElementById('promptBody');
+  const arrow = document.getElementById('promptArrow');
+  const isOpen = body.classList.toggle('open');
+  arrow.classList.toggle('open', isOpen);
+}
 
 // ── 프롬프트 인라인 복사 ──
 function copyPromptInline(){
   const text = document.getElementById('promptPreview').textContent;
   navigator.clipboard.writeText(text).then(()=>{
-    const btn = document.querySelector('.copy-prompt-inline-btn');
+    const btn = document.getElementById('promptToggleCopyBtn');
     btn.textContent = '✅ 복사됨';
     btn.classList.add('copied');
     setTimeout(()=>{ btn.textContent='📋 프롬프트 복사'; btn.classList.remove('copied'); }, 2000);
@@ -1095,17 +1128,23 @@ function switchInputTab(tab){
 
 // ── 덮어쓰기 UI 함수 ──
 function onNameInput(name) {
-  const existing = DATA.submitted.find(s => s.name === name.trim());
+  const q = name.trim();
+  const existing = DATA.submitted.find(s => s.name === q || s.name.trim() === q);
   const cb = document.getElementById('owCheck');
   if (existing) {
-    // 기존 데이터 발견 → 자동으로 덮어쓰기 모드
+    // 기존 학생 → 학교/학년 자동 채우기
+    if (existing.school) document.getElementById('txtSchool').value = existing.school;
+    if (existing.grade) document.getElementById('txtGrade').value = String(existing.grade).replace('학년','');
+    // 덮어쓰기 모드 자동 전환
     if (!cb.checked) {
       cb.checked = true;
       applyOwMode(true);
     }
     showOwPreview(existing);
   } else {
-    // 신규 → 리셋
+    // 신규 → 학교/학년 비우기 + 모드 리셋
+    document.getElementById('txtSchool').value = '';
+    document.getElementById('txtGrade').value = '';
     if (cb.checked) {
       cb.checked = false;
       applyOwMode(false);
